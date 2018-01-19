@@ -1,0 +1,11 @@
+/.vs
+/NetCoreRpc/obj
+/NetCoreRpc/bin
+/NetCoreRpc.Application/obj
+/NetCoreRpc.Application/bin
+/NetCoreRpc.ClientTest/obj
+/NetCoreRpc.ClientTest/bin
+/NetCoreRpc.ServerTest/obj
+/NetCoreRpc.ServerTest/bin
+/NetCoreRpc.Test/obj
+/NetCoreRpc.Test/bin
