@@ -42,6 +42,7 @@ namespace NetCoreRpc.ClientTest
                 str = Console.ReadLine();
             }
         }
+
         private static IServiceProvider BuildDi()
         {
             IServiceCollection services = new ServiceCollection();

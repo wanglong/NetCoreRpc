@@ -51,12 +51,6 @@ namespace NetCoreRpc.Client
 
         private RemotingRequest Create(object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)
         {
-            //var methodCallInfo = new RpcMethodCallInfo()
-            //{
-            //    TypeName = _proxyType.FullName,
-            //    MethodName = methodInfo.Name,
-            //    Parameters = arrMethodArgs
-            //};
             var methodCallInfo = RpcMethodCallInfo.Create(arrMethodArgs, methodInfo, _proxyType.FullName);
             var body = _methodCallSerializer.Serialize(methodCallInfo);
             return new RemotingRequest(100, body);

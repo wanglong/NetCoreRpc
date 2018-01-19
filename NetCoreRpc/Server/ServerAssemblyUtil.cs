@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NetCoreRpc.Utils;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using NetCoreRpc.Utils;
 
 namespace NetCoreRpc.Server
 {

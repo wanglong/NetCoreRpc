@@ -72,6 +72,7 @@ namespace NetCoreRpc.Application
             };
         }
     }
+
     [Serializable]
     public class TestModel
     {
