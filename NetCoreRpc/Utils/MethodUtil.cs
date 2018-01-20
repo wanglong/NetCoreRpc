@@ -1,6 +1,4 @@
 ﻿using NetCoreRpc.Extensions;
-using NetCoreRpc.Serializing;
-using NetCoreRpc.Serializing.Attributes;
 using System;
 using System.Collections.Concurrent;
 using System.Reflection;
@@ -21,11 +19,6 @@ namespace NetCoreRpc.Utils
         /// 方法名字列表
         /// </summary>
         private static readonly ConcurrentDictionary<RuntimeMethodHandle, string> _MethodNameDic = new ConcurrentDictionary<RuntimeMethodHandle, string>();
-
-        /// <summary>
-        /// 方法序列化列表
-        /// </summary>
-        private static readonly ConcurrentDictionary<RuntimeMethodHandle, IBinarySerializer> _MethodSerializerDic = new ConcurrentDictionary<RuntimeMethodHandle, IBinarySerializer>();
 
         /// <summary>
         /// 获取全部的参数类型
@@ -91,36 +84,6 @@ namespace NetCoreRpc.Utils
                 }
                 methodBuilder.Remove(methodBuilder.Length - 1, 1);
                 return methodBuilder.ToString();
-            });
-        }
-
-        /// <summary>
-        /// 根据方法获取序列化类
-        /// </summary>
-        /// <param name="calledMethodInfo"></param>
-        /// <returns></returns>
-        public static IBinarySerializer GetSerailizer(this MethodInfo calledMethodInfo)
-        {
-            return _MethodSerializerDic.GetValue(calledMethodInfo.MethodHandle, () =>
-            {
-                var methodJsonAttribute = calledMethodInfo.GetCustomAttribute<JsonSerializerAttribute>();
-                if (methodJsonAttribute != null)
-                {
-                    return new JsonBinarySerializer();
-                }
-                else if (calledMethodInfo.GetCustomAttribute<BinarySerializerAttribute>() != null)
-                {
-                    return new DefaultBinarySerializer();
-                }
-                else if (calledMethodInfo.DeclaringType.GetCustomAttribute<JsonSerializerAttribute>() != null)
-                {
-                    return new JsonBinarySerializer();
-                }
-                else if (calledMethodInfo.DeclaringType.GetCustomAttribute<BinarySerializerAttribute>() != null)
-                {
-                    return new DefaultBinarySerializer();
-                }
-                return new JsonBinarySerializer();
             });
         }
     }

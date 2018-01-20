@@ -39,7 +39,7 @@ namespace NetCoreRpc.ServerTest
 
             //configure NLog
             loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
-            loggerFactory.ConfigureNLog("nlog.config");
+            loggerFactory.ConfigureNLog("NLog.config");
 
             return serviceProvider;
         }

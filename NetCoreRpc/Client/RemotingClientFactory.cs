@@ -24,12 +24,12 @@ namespace NetCoreRpc.Client
         {
             var className = classType.FullName;
             //TODO 根据类名字动态获取IP端口信息
-            var ipEndPoint = RemoteEndPointConfig.GetServerEndPoint(classType.FullName); //new IPEndPoint(SocketUtils.GetLocalIPV4(), 12345);
+            var ipEndPoint = RemoteEndPointConfig.GetServerEndPoint(classType.FullName); 
             if (ConnectedClientList.ContainsKey(ipEndPoint))
             {
                 return ConnectedClientList[ipEndPoint];
             }
-            SocketRemotingClient client = new SocketRemotingClient(new IPEndPoint(SocketUtils.GetLocalIPV4(), 12345));
+            SocketRemotingClient client = new SocketRemotingClient(ipEndPoint);
             client.RegisterConnectionEventListener(new ProxyClientConnectionLister());
             WaitConnectingClientList.TryAdd(client.ServerEndPoint, client);
             client.Start();

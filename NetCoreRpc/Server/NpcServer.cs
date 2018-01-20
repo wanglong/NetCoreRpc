@@ -22,6 +22,12 @@ namespace NetCoreRpc.Server
             _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle());
         }
 
+        public NRpcServer(string ip, int port)
+        {
+            _iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
+            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle());
+        }
+
         public void Start(params string[] assemblyNameList)
         {
             ServerAssemblyUtil.AddAssemblyList(assemblyNameList);

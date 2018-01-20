@@ -1,6 +1,6 @@
 ﻿{
   "NetCoreRpc": {
-    "Default": "192.168.129.194:12345",
+    "Default": "192.168.101.21:12345",
     "Group": [
       {
         "NameSpace": "",

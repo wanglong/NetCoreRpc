@@ -1,4 +1,4 @@
-﻿using NetCoreRpc.Utils;
+﻿using NetCoreRpc.Serializing;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
