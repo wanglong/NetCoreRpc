@@ -17,7 +17,8 @@ namespace NetCoreRpc.ServerTest
         {
             Console.WriteLine("请输入监听端口:");
             var strPort = Console.ReadLine();
-            var builder = new ConfigurationBuilder().SetBasePath(Path.Combine(AppContext.BaseDirectory)).AddJsonFile("NetCoreRpc.json", optional: true);
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Path.Combine(AppContext.BaseDirectory)).AddJsonFile("NetCoreRpc.json", optional: true);
             Configuration = builder.Build();
             var servicesProvider = BuildDi();
             DependencyManage.SetServiceProvider(servicesProvider, Configuration);
@@ -40,12 +41,12 @@ namespace NetCoreRpc.ServerTest
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddSingleton<IStudentApplication, StudentApplication>();
-            services.UseRpc().UseZK();
+            services.UseRpc();
+                //.UseZK();
             var serviceProvider = services.BuildServiceProvider();
 
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
-
-            //configure NLog
+            
             loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
             loggerFactory.ConfigureNLog("NLog.config");
 
