@@ -1,11 +1,15 @@
 ﻿{
   "NetCoreRpc": {
-    "Default": "192.168.101.21:12345",
+    "Default": "192.168.129.194:12346,192.168.129.194:12347,192.168.129.194:12348",
     "Group": [
       {
         "NameSpace": "",
         "Address": "127.0.0.1:12345"
       }
-    ]
+    ],
+    "Zookeeper": {
+      "Connection": "192.168.100.34:2181",
+      "ParentName": "/NetCoreRpc/ClientTest"
+    }
   }
 }

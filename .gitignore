@@ -10,3 +10,5 @@
 /NetCoreRpc.Test/obj
 /NetCoreRpc.Test/bin
 /NetCoreRpc.ServerTest/Properties/PublishProfiles
+/NetCoreRpc.ZK/obj
+/NetCoreRpc.ZK/bin

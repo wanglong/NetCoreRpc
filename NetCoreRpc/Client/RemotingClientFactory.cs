@@ -24,7 +24,7 @@ namespace NetCoreRpc.Client
         {
             var className = classType.FullName;
             //TODO 根据类名字动态获取IP端口信息
-            var ipEndPoint = RemoteEndPointConfig.GetServerEndPoint(classType.FullName); 
+            var ipEndPoint = RemoteEndPointConfig.GetServerEndPoint(classType.FullName);
             if (ConnectedClientList.ContainsKey(ipEndPoint))
             {
                 return ConnectedClientList[ipEndPoint];

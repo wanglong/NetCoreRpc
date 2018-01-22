@@ -1,19 +1,27 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetCoreRpc.Application;
 using NetCoreRpc.Server;
 using NLog.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace NetCoreRpc.ServerTest
 {
     internal class Program
     {
+        public static IConfigurationRoot Configuration;
+
         private static void Main(string[] args)
         {
+            Console.WriteLine("请输入监听端口:");
+            var strPort = Console.ReadLine();
+            var builder = new ConfigurationBuilder().SetBasePath(Path.Combine(AppContext.BaseDirectory)).AddJsonFile("NetCoreRpc.json", optional: true);
+            Configuration = builder.Build();
             var servicesProvider = BuildDi();
-            DependencyManage.SetServiceProvider(servicesProvider);
-            NRpcServer nrpcServer = new NRpcServer(12345);
+            DependencyManage.SetServiceProvider(servicesProvider, Configuration);
+            NRpcServer nrpcServer = new NRpcServer(int.Parse(strPort));
             nrpcServer.Start("NetCoreRpc.Application");
             Console.WriteLine("Welcome to use NetCoreRpc!");
             Console.WriteLine("Input exit to exit");
@@ -32,7 +40,7 @@ namespace NetCoreRpc.ServerTest
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddSingleton<IStudentApplication, StudentApplication>();
-            services.UseRpc();
+            services.UseRpc().UseZK();
             var serviceProvider = services.BuildServiceProvider();
 
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NetCoreRpc.Application\NetCoreRpc.Application.csproj" />
+    <ProjectReference Include="..\NetCoreRpc.ZK\NetCoreRpc.ZK.csproj" />
     <ProjectReference Include="..\NetCoreRpc\NetCoreRpc.csproj" />
   </ItemGroup>
 

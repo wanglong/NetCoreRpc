@@ -1,4 +1,5 @@
-﻿using NetCoreRpc.Transport.Remoting;
+﻿using NetCoreRpc.ServerRoute;
+using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Transport.Socketing;
 using System.Net;
 
@@ -15,11 +16,13 @@ namespace NetCoreRpc.Server
     {
         private IPEndPoint _iPEndPoint;
         private readonly SocketRemotingServer _socketRemotingServer;
+        private readonly IRouteCoordinator _routeCoordinator;
 
         public NRpcServer(int port)
         {
             _iPEndPoint = new IPEndPoint(SocketUtils.GetLocalIPV4(), port);
             _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle());
+            _routeCoordinator = DependencyManage.Resolve<ICoordinatorFactory>().Create();
         }
 
         public NRpcServer(string ip, int port)
@@ -32,11 +35,14 @@ namespace NetCoreRpc.Server
         {
             ServerAssemblyUtil.AddAssemblyList(assemblyNameList);
             _socketRemotingServer.Start();
+            _routeCoordinator.RegisterAsync(_iPEndPoint).Wait();
         }
 
         public void ShutDown()
         {
             _socketRemotingServer?.Shutdown();
+            _routeCoordinator.DeleteAsync(_iPEndPoint).Wait();
+            _routeCoordinator.CloseAsync().Wait();
         }
     }
 }

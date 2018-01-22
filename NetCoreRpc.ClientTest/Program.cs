@@ -20,7 +20,7 @@ namespace NetCoreRpc.ClientTest
             Configuration = builder.Build();
 
             var servicesProvider = BuildDi();
-            DependencyManage.SetServiceProvider(servicesProvider);
+            DependencyManage.SetServiceProvider(servicesProvider, Configuration);
 
             Console.WriteLine("Welcome to use NetCoreRpc!");
             var studentApplication = ProxyFactory.Create<IStudentApplication>();
@@ -50,7 +50,7 @@ namespace NetCoreRpc.ClientTest
             services.Configure<RemoteEndPointConfig>(Configuration.GetSection("NetCoreRpc"));
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-            services.UseRpc();
+            services.UseRpc().UseZK();
             var serviceProvider = services.BuildServiceProvider();
 
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();

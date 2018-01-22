@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetCoreRpc.Client;
 using NetCoreRpc.Scheduling;
 using NetCoreRpc.Serializing;
+using NetCoreRpc.ServerRoute;
 using NetCoreRpc.Transport;
 using NetCoreRpc.Utils;
 using System;
@@ -22,7 +23,12 @@ namespace NetCoreRpc
         public static IServiceCollection UseRpc(this IServiceCollection serviceCollection)
         {
             RemotingClientFactory.RegisterUnLoad();
-            return serviceCollection.UseDefaultSerializer().UseDefaultMethodSerializer().UseDefaultResponseSerializer().UseDefaultSchedule().UseSocket();
+            return serviceCollection.UseDefaultSerializer().UseDefaultMethodSerializer().UseDefaultResponseSerializer().UseDefaultSchedule().UseSocket().UseDefaultServerRoute();
+        }
+
+        public static IServiceCollection UseZK(this IServiceCollection serviceCollection)
+        {
+            return serviceCollection.UseZKServerRoute();
         }
 
         private static IServiceProvider _ServiceProvider;

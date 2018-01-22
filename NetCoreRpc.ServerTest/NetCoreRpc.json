@@ -1,0 +1,8 @@
+﻿{
+  "NetCoreRpc": {
+    "Zookeeper": {
+      "Connection": "192.168.100.34:2181",
+      "ParentName": "/NetCoreRpc/ClientTest"
+    }
+  }
+}

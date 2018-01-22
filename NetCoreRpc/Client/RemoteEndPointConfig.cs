@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using NetCoreRpc.ServerRoute;
+using NetCoreRpc.Utils;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -13,6 +15,13 @@ namespace NetCoreRpc.Client
     /// </summary>
     public class RemoteEndPointConfig
     {
+        private static IRouteCoordinator _RouteCoordinator;
+
+        static RemoteEndPointConfig()
+        {
+            _RouteCoordinator = DependencyManage.Resolve<ICoordinatorFactory>().Create();
+        }
+
         public string Default { get; set; }
 
         public List<RemoteEndPointConfigGroupInfo> Group { get; set; }
@@ -22,9 +31,12 @@ namespace NetCoreRpc.Client
             if (Group != null && Group.Any())
             {
                 var groupInfo = Group.Where(m => m.NameSpace.Split(',').Contains(typeName)).FirstOrDefault();
-                if (groupInfo != null)
+                if (groupInfo != null && !string.IsNullOrWhiteSpace(groupInfo.Address))
                 {
-                    var ipPointInfo = groupInfo.Address.Split(':');
+                    var serverList = groupInfo.Address.Split(',');
+                    var availableServer = _RouteCoordinator.GetAvailableServerListAsync(serverList.ToList()).Result;
+                    LogUtil.InfoFormat("获得可用IP：{0}", availableServer);
+                    var ipPointInfo = availableServer.Split(':');
                     if (ipPointInfo.Length == 2)
                     {
                         return new IPEndPoint(IPAddress.Parse(ipPointInfo[0]), int.Parse(ipPointInfo[1]));
@@ -33,7 +45,10 @@ namespace NetCoreRpc.Client
             }
             if (!string.IsNullOrWhiteSpace(Default))
             {
-                var ipPointInfo = Default.Split(':');
+                var serverList = Default.Split(',');
+                var availableServer = _RouteCoordinator.GetAvailableServerListAsync(serverList.ToList()).Result;
+                LogUtil.InfoFormat("获得可用IP：{0}", availableServer);
+                var ipPointInfo = availableServer.Split(':');
                 if (ipPointInfo.Length == 2)
                 {
                     return new IPEndPoint(IPAddress.Parse(ipPointInfo[0]), int.Parse(ipPointInfo[1]));
