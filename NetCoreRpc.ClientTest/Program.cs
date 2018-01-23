@@ -21,8 +21,18 @@ namespace NetCoreRpc.ClientTest
 
             var servicesProvider = BuildDi();
             DependencyManage.SetServiceProvider(servicesProvider, Configuration);
-
             Console.WriteLine("Welcome to use NetCoreRpc!");
+            Console.WriteLine("Input exit to exit");
+            var str = Console.ReadLine();
+            while (!string.Equals(str, "exit", StringComparison.OrdinalIgnoreCase))
+            {
+                Send();
+                str = Console.ReadLine();
+            }
+        }
+
+        private static void Send()
+        {
             var studentApplication = ProxyFactory.Create<IStudentApplication>();
             Console.WriteLine(studentApplication.Age());
             Console.WriteLine(studentApplication.IsYongPeople(15));
@@ -34,13 +44,6 @@ namespace NetCoreRpc.ClientTest
             Console.WriteLine(test.ToString());
             studentApplication.Sleep();
             Console.WriteLine(runTask.Result);
-
-            Console.WriteLine("Input exit to exit");
-            var str = Console.ReadLine();
-            while (!string.Equals(str, "exit", StringComparison.OrdinalIgnoreCase))
-            {
-                str = Console.ReadLine();
-            }
         }
 
         private static IServiceProvider BuildDi()

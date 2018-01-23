@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NetCoreRpc.ServerRoute
@@ -14,6 +15,8 @@ namespace NetCoreRpc.ServerRoute
     /// </summary>
     public sealed class DefaultCoordinator : IRouteCoordinator
     {
+        private int _currentRequestCount = 0;
+
         public Task CloseAsync()
         {
             return Task.Delay(1);
@@ -26,7 +29,12 @@ namespace NetCoreRpc.ServerRoute
 
         public Task<string> GetAvailableServerListAsync(List<string> currentServerList)
         {
-            return Task.FromResult(currentServerList?.FirstOrDefault());
+            if (!currentServerList.Any())
+            {
+                return Task.FromResult("");
+            }
+            var requestCount = Interlocked.Increment(ref _currentRequestCount);
+            return Task.FromResult(currentServerList[requestCount % currentServerList.Count]);
         }
 
         public Task RegisterAsync(IPEndPoint iPEndPoint)

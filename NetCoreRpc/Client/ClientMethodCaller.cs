@@ -5,7 +5,6 @@ using System;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using static NetCoreRpc.Client.ClientConfig;
 
 namespace NetCoreRpc.Client
 {
@@ -44,8 +43,10 @@ namespace NetCoreRpc.Client
         public object DoMethodCall(object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)
         {
             var client = RemotingClientFactory.GetClient(_proxyType);
+            LogUtil.InfoFormat("Start Request rpc Method：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
             var requestInfo = Create(arrMethodArgs, argmentTypes, methodInfo);
-            var response = client.InvokeSync(requestInfo, CurrentClientConfig.TimeouMillis);
+            var response = client.InvokeSync(requestInfo, RemoteEndPointConfig.GetRequestTimeouMillis());
+            LogUtil.InfoFormat("rpc Method CallBack：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
             return HandleResponse(response, methodInfo);
         }
 

@@ -134,7 +134,7 @@ namespace NetCoreRpc.Transport.Remoting
         public RemotingResponse InvokeSync(RemotingRequest request, int timeoutMillis)
         {
             var task = InvokeAsync(request, timeoutMillis);
-            var response = task.WaitResult<RemotingResponse>(timeoutMillis + 1000);
+            var response = task.WaitResult(timeoutMillis + 1000);
 
             if (response == null)
             {
@@ -157,18 +157,14 @@ namespace NetCoreRpc.Transport.Remoting
         public Task<RemotingResponse> InvokeAsync(RemotingRequest request, int timeoutMillis)
         {
             EnsureClientStatus();
-
             request.Type = RemotingRequestType.Async;
             var taskCompletionSource = new TaskCompletionSource<RemotingResponse>();
             var responseFuture = new ResponseFuture(request, timeoutMillis, taskCompletionSource);
-
             if (!_responseFutureDict.TryAdd(request.Sequence, responseFuture))
             {
                 throw new ResponseFutureAddFailedException(request.Sequence);
             }
-
             _clientSocket.QueueMessage(RemotingUtil.BuildRequestMessage(request));
-
             return taskCompletionSource.Task;
         }
 
@@ -191,9 +187,7 @@ namespace NetCoreRpc.Transport.Remoting
         private void HandleServerMessage(ITcpConnection connection, byte[] message)
         {
             if (message == null) return;
-
             var remotingServerMessage = RemotingUtil.ParseRemotingServerMessage(message);
-
             if (remotingServerMessage.Type == RemotingServerMessageType.RemotingResponse)
             {
                 HandleResponseMessage(connection, remotingServerMessage.Body);
@@ -209,7 +203,6 @@ namespace NetCoreRpc.Transport.Remoting
             if (message == null) return;
 
             var remotingResponse = RemotingUtil.ParseResponse(message);
-
             if (remotingResponse.RequestType == RemotingRequestType.Callback)
             {
                 IResponseHandler responseHandler;

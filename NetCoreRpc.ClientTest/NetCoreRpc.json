@@ -1,6 +1,7 @@
 ﻿{
   "NetCoreRpc": {
-    "Default": "192.168.129.194:12345",
+    "RequestTimeouMillis": 10000,
+    "Default": "192.168.129.194:12345,192.168.129.194:12346",
     "Group": [
       {
         "NameSpace": "",

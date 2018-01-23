@@ -37,10 +37,11 @@ namespace NetCoreRpc.Application
             return age < 18;
         }
 
-        public async Task<int> RunAsync(int sleepTime)
+        public Task<int> RunAsync(int sleepTime)
         {
-            await Task.Delay(sleepTime);
-            return sleepTime;
+            //await Task.Delay(sleepTime);
+            //return sleepTime;
+            return Task.FromResult(sleepTime);
         }
 
         public void Say(string msg)

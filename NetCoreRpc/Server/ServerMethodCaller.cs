@@ -35,42 +35,46 @@ namespace NetCoreRpc.Server
                 var obj = scope.ServiceProvider.GetService(classType);
                 try
                 {
+                    LogUtil.InfoFormat("Begin Deal Rpc Request:{0}-{1}", requestMethodInfo.TypeName, requestMethodInfo.MethodName);
                     var executeMethodInfo = ServerAssemblyUtil.GetMethod(requestMethodInfo.MethodName, classType) as MethodInfo;
                     if (executeMethodInfo == null)
                     {
-                        LogUtil.Warn($"未找到方法{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName}");
+                        LogUtil.Info($"Not found Method{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName}");
                         return remotingRequest.CreateNotFoundResponse($"{requestMethodInfo.TypeName},{requestMethodInfo.MethodName}");
                     }
                     else
                     {
                         var delegateType = executeMethodInfo.GetMethodReturnType();
                         var executeResult = executeMethodInfo.Invoke(obj, requestMethodInfo.Parameters);
+                        RemotingResponse remotingResponse;
                         if (delegateType == MethodType.SyncAction)
                         {
-                            return remotingRequest.CreateSuccessResponse(ResponseUtil.NoneBodyResponse);
+                            remotingResponse = remotingRequest.CreateSuccessResponse(ResponseUtil.NoneBodyResponse);
                         }
                         else if (delegateType == MethodType.SyncFunction)
                         {
-                            return remotingRequest.CreateSuccessResponse(GetBody(executeResult, executeMethodInfo));
+                            remotingResponse = remotingRequest.CreateSuccessResponse(GetBody(executeResult, executeMethodInfo));
                         }
                         else if (delegateType == MethodType.AsyncAction)
                         {
                             var task = (Task)executeResult;
                             task.Wait();
-                            return remotingRequest.CreateSuccessResponse(ResponseUtil.NoneBodyResponse);
+                            remotingResponse = remotingRequest.CreateSuccessResponse(ResponseUtil.NoneBodyResponse);
                         }
                         else
                         {
                             var resultType = executeMethodInfo.ReturnType.GetGenericArguments()[0];
                             var mi = HandleAsyncMethodInfo.MakeGenericMethod(resultType);
                             var result = mi.Invoke(this, new[] { executeResult });
-                            return remotingRequest.CreateSuccessResponse(GetBody(result, executeMethodInfo));
+                            remotingResponse = remotingRequest.CreateSuccessResponse(GetBody(result, executeMethodInfo));
                         }
+                        LogUtil.InfoFormat("Rpc Method Dealed:{0}-{1}", requestMethodInfo.TypeName, requestMethodInfo.MethodName);
+                        return remotingResponse;
                     }
                 }
                 catch (Exception e)
                 {
-                    LogUtil.Error($"执行{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName}方法失败", e);
+                    LogUtil.Error($"excute{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName} failed", e);
                     return remotingRequest.CreateDealErrorResponse();
                 }
             }

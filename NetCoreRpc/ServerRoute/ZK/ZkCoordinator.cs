@@ -23,6 +23,7 @@ namespace NetCoreRpc.ServerRoute.ZK
         private readonly RouteCoordinatorOption _routeCoordinatorOption;
         private List<string> _availableServerList = new List<string>();
         private bool _isHaveWatcher = false;
+        private int _currentRequestCount = 0;
 
         public ZkCoordinator(RouteCoordinatorOption routeCoordinatorOption)
         {
@@ -131,7 +132,17 @@ namespace NetCoreRpc.ServerRoute.ZK
                 await UpdateChildrenAsync(_zkManager);
                 _isHaveWatcher = true;
             }
-            return currentServerList.FirstOrDefault(m => _availableServerList.Contains(m));
+            if (!currentServerList.Any())
+            {
+                return string.Empty;
+            }
+            var availableList = currentServerList.Where((m => _availableServerList.Contains(m)));
+            if (!availableList.Any())
+            {
+                return string.Empty;
+            }
+            var requestCount = Interlocked.Increment(ref _currentRequestCount);
+            return availableList.ToList()[requestCount % availableList.Count()];
         }
 
         public Task DeleteAsync(IPEndPoint iPEndPoint)

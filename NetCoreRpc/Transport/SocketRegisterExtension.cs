@@ -19,7 +19,7 @@ namespace NetCoreRpc.Transport
         /// <returns></returns>
         public static IServiceCollection UseSocket(this IServiceCollection serviceCollection)
         {
-            serviceCollection.AddSingleton<IMessageFramer, LengthPrefixMessageFramer>();
+            serviceCollection.AddTransient<IMessageFramer, LengthPrefixMessageFramer>();
             return serviceCollection;
         }
     }

@@ -147,11 +147,16 @@ namespace NetCoreRpc.Transport.Socketing
 
         private void TrySend()
         {
-            if (_closing == 1) return;
-            if (!EnterSending()) return;
+            if (_closing == 1)
+            {
+                return;
+            }
+            if (!EnterSending())
+            {
+                return;
+            }
 
             _sendingStream.SetLength(0);
-
             IEnumerable<ArraySegment<byte>> segments;
             while (_sendingQueue.TryDequeue(out segments))
             {
@@ -165,7 +170,6 @@ namespace NetCoreRpc.Transport.Socketing
                     break;
                 }
             }
-
             if (_sendingStream.Length == 0)
             {
                 ExitSending();
@@ -200,7 +204,6 @@ namespace NetCoreRpc.Transport.Socketing
         private void ProcessSend(SocketAsyncEventArgs socketArgs)
         {
             if (_closing == 1) return;
-
             ExitSending();
 
             if (socketArgs.SocketError == SocketError.Success)
@@ -230,7 +233,6 @@ namespace NetCoreRpc.Transport.Socketing
         private void TryReceive()
         {
             if (!EnterReceiving()) return;
-
             var buffer = _receiveDataBufferPool.Get();
             if (buffer == null)
             {
@@ -248,7 +250,6 @@ namespace NetCoreRpc.Transport.Socketing
                     ExitReceiving();
                     return;
                 }
-
                 bool firedAsync = _receiveSocketArgs.AcceptSocket.ReceiveAsync(_receiveSocketArgs);
                 if (!firedAsync)
                 {
@@ -281,7 +282,6 @@ namespace NetCoreRpc.Transport.Socketing
                 var receiveQueue = socketArgs.UserToken as ConcurrentQueue<ReceivedData>;
                 receiveQueue.Enqueue(new ReceivedData(segment, socketArgs.BytesTransferred));
                 socketArgs.SetBuffer(null, 0, 0);
-
                 TryParsingReceivedData(receiveQueue);
             }
             catch (Exception ex)
@@ -297,7 +297,6 @@ namespace NetCoreRpc.Transport.Socketing
         private void TryParsingReceivedData(ConcurrentQueue<ReceivedData> receiveQueue)
         {
             if (!EnterParsing()) return;
-
             try
             {
                 var dataList = new List<ReceivedData>(receiveQueue.Count);

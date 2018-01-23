@@ -1,5 +1,4 @@
 ﻿using NetCoreRpc.ServerRoute;
-using NetCoreRpc.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -22,6 +21,11 @@ namespace NetCoreRpc.Client
             _RouteCoordinator = DependencyManage.Resolve<ICoordinatorFactory>().Create();
         }
 
+        /// <summary>
+        /// 请求超时时间
+        /// </summary>
+        public int RequestTimeouMillis { get; set; }
+
         public string Default { get; set; }
 
         public List<RemoteEndPointConfigGroupInfo> Group { get; set; }
@@ -35,7 +39,6 @@ namespace NetCoreRpc.Client
                 {
                     var serverList = groupInfo.Address.Split(',');
                     var availableServer = _RouteCoordinator.GetAvailableServerListAsync(serverList.ToList()).Result;
-                    LogUtil.InfoFormat("获得可用IP：{0}", availableServer);
                     var ipPointInfo = availableServer.Split(':');
                     if (ipPointInfo.Length == 2)
                     {
@@ -47,7 +50,6 @@ namespace NetCoreRpc.Client
             {
                 var serverList = Default.Split(',');
                 var availableServer = _RouteCoordinator.GetAvailableServerListAsync(serverList.ToList()).Result;
-                LogUtil.InfoFormat("获得可用IP：{0}", availableServer);
                 var ipPointInfo = availableServer.Split(':');
                 if (ipPointInfo.Length == 2)
                 {
@@ -65,6 +67,11 @@ namespace NetCoreRpc.Client
                 throw new System.Exception("获取远程服务IP失败");
             }
             return endPoint;
+        }
+
+        public static int GetRequestTimeouMillis()
+        {
+            return ConfigurationManage.GetOption<RemoteEndPointConfig>().RequestTimeouMillis;
         }
     }
 
