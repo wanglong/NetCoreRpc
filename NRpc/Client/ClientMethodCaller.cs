@@ -1,12 +1,12 @@
-﻿using NetCoreRpc.Serializing;
-using NetCoreRpc.Transport.Remoting;
-using NetCoreRpc.Utils;
+﻿using NRpc.Serializing;
+using NRpc.Transport.Remoting;
+using NRpc.Utils;
 using System;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetCoreRpc.Client
+namespace NRpc.Client
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。
@@ -45,8 +45,8 @@ namespace NetCoreRpc.Client
             LogUtil.InfoFormat("Start Request rpc Method：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
             var client = RemotingClientFactory.GetClient(_proxyType);
             var requestInfo = Create(arrMethodArgs, argmentTypes, methodInfo);
-            var response = client.InvokeSync(requestInfo, RemoteEndPointConfig.GetRequestTimeouMillis());
-            var result= HandleResponse(response, methodInfo);
+            var response = client.InvokeSync(requestInfo, NRpcConfig.GetRequestTimeouMillis());
+            var result = HandleResponse(response, methodInfo);
             LogUtil.InfoFormat("rpc Method CallBack：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
             return result;
         }

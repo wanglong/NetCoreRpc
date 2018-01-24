@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{F435A05C-F993-46D6-AAF8-FE9204C6F239}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NRpc</RootNamespace>
+    <AssemblyName>NRpc</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Extras.DynamicProxy, Version=4.2.1.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.Extras.DynamicProxy.4.2.1\lib\net45\Autofac.Extras.DynamicProxy.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.2.1\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ZooKeeperNetEx, Version=3.4.10.1, Culture=neutral, PublicKeyToken=42cd15de36f9b993, processorArchitecture=MSIL">
+      <HintPath>..\packages\ZooKeeperNetEx.3.4.10.1\lib\net45\ZooKeeperNetEx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Client\ClientMethodCaller.cs" />
+    <Compile Include="Client\ProxyFactory.cs" />
+    <Compile Include="NRpcConfig.cs" />
+    <Compile Include="Client\RemotingClientFactory.cs" />
+    <Compile Include="Client\RpcProxyImpl.cs" />
+    <Compile Include="Dependency\AutofacContainer\AutofacExtension.cs" />
+    <Compile Include="Dependency\AutofacContainer\AutofacLeftScope.cs" />
+    <Compile Include="Dependency\AutofacContainer\AutofacObjectContainer.cs" />
+    <Compile Include="DependencyManage.cs" />
+    <Compile Include="Dependency\IIocRegister.cs" />
+    <Compile Include="Dependency\IIocResolve.cs" />
+    <Compile Include="Dependency\IIocScopeResolve.cs" />
+    <Compile Include="Dependency\IObjectContainer.cs" />
+    <Compile Include="Dependency\LifeStyle.cs" />
+    <Compile Include="Extensions\ConcurrentDictionaryExtension.cs" />
+    <Compile Include="Extensions\ExceptionExtension.cs" />
+    <Compile Include="Extensions\ObjectJudgeExtension.cs" />
+    <Compile Include="Extensions\TaskExtensions.cs" />
+    <Compile Include="Logger\ILogger.cs" />
+    <Compile Include="Logger\ILoggerFactory.cs" />
+    <Compile Include="Logger\LoggerRegisterExtension.cs" />
+    <Compile Include="Logger\NLogger\NLoggerFactory.cs" />
+    <Compile Include="Logger\NLogger\NLogLogger.cs" />
+    <Compile Include="ObjectId.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RpcMethodCallInfo.cs" />
+    <Compile Include="Scheduling\IScheduleService.cs" />
+    <Compile Include="Scheduling\ScheduleRegisterExtension.cs" />
+    <Compile Include="Scheduling\ScheduleService.cs" />
+    <Compile Include="SelfDisposable.cs" />
+    <Compile Include="Serializing\Attributes\BinarySerializerAttribute.cs" />
+    <Compile Include="Serializing\Attributes\JsonSerializerAttribute.cs" />
+    <Compile Include="Serializing\BinarySerializeRegisterExtension.cs" />
+    <Compile Include="Serializing\DefaultBinarySerializer.cs" />
+    <Compile Include="Serializing\IBinarySerializer.cs" />
+    <Compile Include="Serializing\IMethodCallSerializer.cs" />
+    <Compile Include="Serializing\IResponseSerailizer.cs" />
+    <Compile Include="Serializing\JsonBinarySerializer.cs" />
+    <Compile Include="Serializing\MethodCallSerializer.cs" />
+    <Compile Include="Serializing\ResponseSerializer.cs" />
+    <Compile Include="Serializing\SerializerUtil.cs" />
+    <Compile Include="ServerRoute\DefalutCoordinatorFactory.cs" />
+    <Compile Include="ServerRoute\DefaultCoordinator.cs" />
+    <Compile Include="ServerRoute\ICoordinatorFactory.cs" />
+    <Compile Include="ServerRoute\IRouteCoordinator.cs" />
+    <Compile Include="ServerRoute\RouteCoordinatorOption.cs" />
+    <Compile Include="ServerRoute\ServerRouteRegisterExtension.cs" />
+    <Compile Include="ServerRoute\ZK\ZkCoordinator.cs" />
+    <Compile Include="ServerRoute\ZK\ZkCoordinatorFactory.cs" />
+    <Compile Include="ServerRoute\ZK\ZkManager.cs" />
+    <Compile Include="Server\NpcServer.cs" />
+    <Compile Include="Server\NRpcHandle.cs" />
+    <Compile Include="Server\ServerAssemblyUtil.cs" />
+    <Compile Include="Server\ServerMethodCaller.cs" />
+    <Compile Include="Transport\Remoting\Exceptions\RemotingRequestException.cs" />
+    <Compile Include="Transport\Remoting\Exceptions\RemotingServerUnAvailableException.cs" />
+    <Compile Include="Transport\Remoting\Exceptions\RemotingTimeoutException.cs" />
+    <Compile Include="Transport\Remoting\Exceptions\ResponseFutureAddFailedException.cs" />
+    <Compile Include="Transport\Remoting\IRemotingServerMessageHandler.cs" />
+    <Compile Include="Transport\Remoting\IRequestHandler.cs" />
+    <Compile Include="Transport\Remoting\IRequestHandlerContext.cs" />
+    <Compile Include="Transport\Remoting\IResponseHandler.cs" />
+    <Compile Include="Transport\Remoting\RemotingRequest.cs" />
+    <Compile Include="Transport\Remoting\RemotingResponse.cs" />
+    <Compile Include="Transport\Remoting\RemotingServerMessage.cs" />
+    <Compile Include="Transport\Remoting\RemotingServerMessageType.cs" />
+    <Compile Include="Transport\Remoting\RemotingState.cs" />
+    <Compile Include="Transport\Remoting\RemotingUtil.cs" />
+    <Compile Include="Transport\Remoting\ResponseFuture.cs" />
+    <Compile Include="Transport\Remoting\ResponseUtil.cs" />
+    <Compile Include="Transport\Remoting\SocketRemotingClient.cs" />
+    <Compile Include="Transport\Remoting\SocketRemotingServer.cs" />
+    <Compile Include="Transport\Remoting\SocketRequestHandlerContext.cs" />
+    <Compile Include="Transport\Socketing\BufferManagement\BufferItemCreator.cs" />
+    <Compile Include="Transport\Socketing\BufferManagement\BufferPool.cs" />
+    <Compile Include="Transport\Socketing\BufferManagement\IBufferPool.cs" />
+    <Compile Include="Transport\Socketing\BufferManagement\IntelliPool.cs" />
+    <Compile Include="Transport\Socketing\BufferManagement\IPool.cs" />
+    <Compile Include="Transport\Socketing\BufferManagement\IPoolItemCreator.cs" />
+    <Compile Include="Transport\Socketing\ClientSocket.cs" />
+    <Compile Include="Transport\Socketing\Framing\IMessageFramer.cs" />
+    <Compile Include="Transport\Socketing\Framing\LengthPrefixMessageFramer.cs" />
+    <Compile Include="Transport\Socketing\IConnectionEventListener.cs" />
+    <Compile Include="Transport\Socketing\ServerSocket.cs" />
+    <Compile Include="Transport\Socketing\SocketSetting.cs" />
+    <Compile Include="Transport\Socketing\SocketUtils.cs" />
+    <Compile Include="Transport\Socketing\TcpConnection.cs" />
+    <Compile Include="Transport\SocketRegisterExtension.cs" />
+    <Compile Include="Utils\ByteUtil.cs" />
+    <Compile Include="Utils\Ensure.cs" />
+    <Compile Include="Utils\ExceptionUtil.cs" />
+    <Compile Include="Utils\FileUtil.cs" />
+    <Compile Include="Utils\FileWatchUtil.cs" />
+    <Compile Include="Utils\LogUtil.cs" />
+    <Compile Include="Utils\MethodUtil.cs" />
+    <Compile Include="NRpcConfigWatcher.cs" />
+    <Compile Include="Utils\TypeUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
