@@ -18,3 +18,5 @@
 /NRpc.ClientTest/bin
 /NRpc.ServerTest/obj
 /NRpc.ServerTest/bin
+/NRpc.Serializer/obj
+/NRpc.Serializer/bin
