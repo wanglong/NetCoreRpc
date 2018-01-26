@@ -41,21 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseDserializer.cs" />
-    <Compile Include="BaseSerializer.cs" />
-    <Compile Include="IntDeserializer.cs" />
-    <Compile Include="IntSerializer.cs" />
-    <Compile Include="ObjectDserializer.cs" />
-    <Compile Include="ObjectSerializer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerializerConstants.cs" />
-    <Compile Include="SerializerFactory.cs" />
-    <Compile Include="SerializerInput.cs" />
-    <Compile Include="SerializerOutput.cs" />
-    <Compile Include="RpcSerializerUtil.cs" />
-    <Compile Include="StringDserializer.cs" />
-    <Compile Include="StringSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
