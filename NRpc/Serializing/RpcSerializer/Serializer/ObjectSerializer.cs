@@ -25,7 +25,7 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
         {
             if (obj == null)
             {
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Object, ByteUtil.ZeroLengthBytes, ByteUtil.EmptyBytes);
+                return NullBytes();
             }
             var typeNameBytes = RpcSerializerUtil.EncodeString(_type.FullName);
             var fieldList = _type.GetRpcFieldList();

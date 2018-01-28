@@ -1,6 +1,7 @@
 ﻿using NRpc.Serializing.RpcSerializer.Deserializer;
 using NRpc.Serializing.RpcSerializer.Serializer;
 using NRpc.Utils;
+using System.Collections;
 
 namespace NRpc.Serializing.RpcSerializer
 {
@@ -33,6 +34,22 @@ namespace NRpc.Serializing.RpcSerializer
                 }
                 else
                 {
+                    if (type.IsEnum)
+                    {
+                        return new EnumSerializer(type).GeteObjectBytes(obj);
+                    }
+                    else if (type.IsArray)
+                    {
+                        return new ArraySerializercs(type).GeteObjectBytes(obj);
+                    }
+                    else if (typeof(IDictionary).IsAssignableFrom(type))
+                    {
+                        return new DictionarySerializer(type).GeteObjectBytes(obj);
+                    }
+                    else if (typeof(IEnumerable).IsAssignableFrom(type))
+                    {
+                        return new EnumerableSerializer(type).GeteObjectBytes(obj);
+                    }
                     return new ObjectSerializer(type).GeteObjectBytes(obj);
                 }
             }

@@ -1,4 +1,6 @@
-﻿namespace NRpc.Serializing.RpcSerializer.Serializer
+﻿using NRpc.Utils;
+
+namespace NRpc.Serializing.RpcSerializer.Serializer
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。
@@ -10,5 +12,10 @@
     public abstract class BaseSerializer
     {
         public abstract byte[] GeteObjectBytes(object obj);
+
+        public byte[] NullBytes()
+        {
+            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Object, ByteUtil.ZeroLengthBytes, ByteUtil.EmptyBytes);
+        }
     }
 }

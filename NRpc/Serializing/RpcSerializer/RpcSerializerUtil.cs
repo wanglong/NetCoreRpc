@@ -20,6 +20,16 @@ namespace NRpc.Serializing.RpcSerializer
             return ByteUtil.Combine(Bytes_String, lengthBytes, dataBytes);
         }
 
+        public static string DecodeString(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            return ByteUtil.DecodeString(sourceBuffer, startOffset + 1, out nextStartOffset);
+        }
+
+        public static byte[] GetNullByte()
+        {
+            return ByteUtil.Combine(Bytes_Object, ByteUtil.ZeroLengthBytes, ByteUtil.EmptyBytes);
+        }
+
         private static ConcurrentDictionary<string, RuntimeTypeHandle> _RuntimeTypeHandleDic = new ConcurrentDictionary<string, RuntimeTypeHandle>();
 
         public static Type GetType(string typeName)

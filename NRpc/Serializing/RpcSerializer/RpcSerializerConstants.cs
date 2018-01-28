@@ -88,6 +88,22 @@ namespace NRpc.Serializing.RpcSerializer
         public static readonly byte Byte_ByteArray = (byte)Char_ByteArray;
         public static readonly byte[] Bytes_ByteArray = new byte[1] { Byte_ByteArray };
 
+        public static readonly char Char_Enum = 'U';
+        public static readonly byte Byte_Enum = (byte)Char_Enum;
+        public static readonly byte[] Bytes_Enum = new byte[1] { Byte_Enum };
+
+        public static readonly char Char_Array = 'Y';
+        public static readonly byte Byte_Array = (byte)Char_Array;
+        public static readonly byte[] Bytes_Array = new byte[1] { Byte_Array };
+
+        public static readonly char Char_Dictionary = 'y';
+        public static readonly byte Byte_Dictionary = (byte)Char_Dictionary;
+        public static readonly byte[] Bytes_Dictionary = new byte[1] { Byte_Dictionary };
+
+        public static readonly char Char_Enumerable = 'X';
+        public static readonly byte Byte_Enumerable = (byte)Char_Enumerable;
+        public static readonly byte[] Bytes_Enumerable = new byte[1] { Byte_Enumerable };
+
         public static readonly Dictionary<RuntimeTypeHandle, BaseSerializer> SerializerMap = new Dictionary<RuntimeTypeHandle, BaseSerializer>()
         {
             [typeof(string).TypeHandle] = new StringSerializer(),
@@ -127,6 +143,10 @@ namespace NRpc.Serializing.RpcSerializer
             [Byte_DateTime] = new DateTimeDeserializer(),
             [Byte_TimeSpan] = new TimeSpanDeserializer(),
             [Byte_ByteArray] = new ByteArrayDeserializer(),
+            [Byte_Enum] = new EnumDeserializer(),
+            [Byte_Array] = new ArrayDeserializer(),
+            [Byte_Dictionary] = new DictionaryDeserializer(),
+            [Byte_Enumerable] = new EnumerableDeserializer(),
         };
     }
 }

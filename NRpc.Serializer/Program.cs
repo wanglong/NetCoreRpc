@@ -1,5 +1,7 @@
 ﻿using NRpc.Serializing.RpcSerializer;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace NRpc.Serializer
@@ -8,10 +10,16 @@ namespace NRpc.Serializer
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine(sizeof(Double));
-            Console.WriteLine(sizeof(float));
-            Console.WriteLine(sizeof(decimal));
-            Console.WriteLine(typeof(byte[][]));
+            //IEnumerator<>;
+            //IEnumerable<>;
+            //Console.WriteLine((typeof(TT)).FullName);
+            //Console.WriteLine(sizeof(Double));
+            //Console.WriteLine(sizeof(float));
+            //Console.WriteLine(sizeof(decimal));
+            //Console.WriteLine(typeof(byte[][]));
+            //var type = typeof(byte[][]);
+            //Console.WriteLine(type.GetElementType().Name);
+            //Console.ReadLine();
             var test = new Test
             {
                 P1 = null,
@@ -32,7 +40,20 @@ namespace NRpc.Serializer
                 P16 = TimeSpan.FromTicks(1025233),
                 P17 = "测试数据",
                 P18 = Encoding.UTF8.GetBytes("你好啊"),
-                P19 = new Aa { P1 = 19 }
+                P19 = new Aa
+                {
+                    P1 = 19,
+                    P2 = Sex.Woman,
+                    P3 = new int[][] {
+                        new int[]{ },new int[]{ 1,2,4,5}
+                    },
+                    P4 = new Dictionary<int, string>
+                    {
+                        [1] = "1",
+                        [2] = "2"
+                    },
+                    P5 =Enumerable.Range(0,10)
+                }
             };
             var bytes = SerializerFactory.Serializer(test);
             var obj = SerializerFactory.Deserializer(bytes);
@@ -78,6 +99,7 @@ namespace NRpc.Serializer
         public byte[] P18 { get; set; }
 
         public Aa P19 { get; set; }
+
         public override string ToString()
         {
             var msg = (P18 != null && P18.Length > 0) ? Encoding.UTF8.GetString(P18) : "";
@@ -89,9 +111,34 @@ namespace NRpc.Serializer
     {
         public int P1 { get; set; }
 
+        public Sex P2 { get; set; }
+
+        public int[][] P3 { get; set; }
+
+        public Dictionary<int, string> P4 { get; set; }
+
+        public IEnumerable<int> P5 { get; set; }
+
         public override string ToString()
         {
-            return P1.ToString();
+            if (P4 != null)
+            {
+                foreach (var item in P4)
+                {
+                    Console.WriteLine($"{item.Key},{item.Value}");
+                }
+            }
+            if (P5 != null)
+            {
+                Console.WriteLine(string.Join("|", P5));
+            }
+            return $"{P1},{P2},{string.Join(",", P3[1])}";
         }
+    }
+
+    public enum Sex
+    {
+        Man = 1,
+        Woman = 2
     }
 }

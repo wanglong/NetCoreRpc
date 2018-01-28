@@ -39,10 +39,12 @@ namespace NRpc
         {
             return SetContainer(new AutofacObjectContainer(builder));
         }
+
         public static DependencyManage UseAutofacContainer()
         {
             return SetContainer(new AutofacObjectContainer(null));
         }
+
         private static DependencyManage SetContainer(IObjectContainer container)
         {
             Instance.Container = container;
