@@ -2,6 +2,7 @@
 using NetCoreRpc.Serializing.RpcSerializer.Serializer;
 using System;
 using System.Collections.Generic;
+using System.Data;
 
 namespace NetCoreRpc.Serializing.RpcSerializer
 {
@@ -104,6 +105,15 @@ namespace NetCoreRpc.Serializing.RpcSerializer
         public static readonly byte Byte_Enumerable = (byte)Char_Enumerable;
         public static readonly byte[] Bytes_Enumerable = new byte[1] { Byte_Enumerable };
 
+
+        public static readonly char Char_DataTable = 'x';
+        public static readonly byte Byte_DataTable = (byte)Char_DataTable;
+        public static readonly byte[] Bytes_DataTable = new byte[1] { Byte_DataTable };
+
+        public static readonly char Char_DataSet = 'Z';
+        public static readonly byte Byte_DataSet = (byte)Char_DataSet;
+        public static readonly byte[] Bytes_DataSet = new byte[1] { Byte_DataSet };
+
         public static readonly Dictionary<RuntimeTypeHandle, BaseSerializer> SerializerMap = new Dictionary<RuntimeTypeHandle, BaseSerializer>()
         {
             [typeof(string).TypeHandle] = new StringSerializer(),
@@ -122,6 +132,8 @@ namespace NetCoreRpc.Serializing.RpcSerializer
             [typeof(DateTime).TypeHandle] = new DateTimeSerializer(),
             [typeof(TimeSpan).TypeHandle] = new TimeSpanSerializer(),
             [typeof(byte[]).TypeHandle] = new ByteArraySerializer(),
+            [typeof(DataTable).TypeHandle] = new DataTableSerializer(),
+            [typeof(DataSet).TypeHandle] = new DataSetSerializer(),
         };
 
         public static readonly Dictionary<byte, BaseDeserializer> DeserializerMap = new Dictionary<byte, BaseDeserializer>()
@@ -147,6 +159,8 @@ namespace NetCoreRpc.Serializing.RpcSerializer
             [Byte_Array] = new ArrayDeserializer(),
             [Byte_Dictionary] = new DictionaryDeserializer(),
             [Byte_Enumerable] = new EnumerableDeserializer(),
+            [Byte_DataTable] = new DataTableDeserializer(),
+            [Byte_DataSet] = new DataSetDeserializer(),
         };
     }
 }

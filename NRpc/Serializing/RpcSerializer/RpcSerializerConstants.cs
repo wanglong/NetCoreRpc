@@ -132,6 +132,7 @@ namespace NRpc.Serializing.RpcSerializer
             [typeof(TimeSpan).TypeHandle] = new TimeSpanSerializer(),
             [typeof(byte[]).TypeHandle] = new ByteArraySerializer(),
             [typeof(DataTable).TypeHandle] = new DataTableSerializer(),
+            [typeof(DataSet).TypeHandle] = new DataSetSerializer(),
         };
 
         public static readonly Dictionary<byte, BaseDeserializer> DeserializerMap = new Dictionary<byte, BaseDeserializer>()
@@ -158,6 +159,7 @@ namespace NRpc.Serializing.RpcSerializer
             [Byte_Dictionary] = new DictionaryDeserializer(),
             [Byte_Enumerable] = new EnumerableDeserializer(),
             [Byte_DataTable] = new DataTableDeserializer(),
+            [Byte_DataSet] = new DataSetDeserializer(),
         };
     }
 }

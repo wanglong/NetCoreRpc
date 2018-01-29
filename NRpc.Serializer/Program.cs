@@ -235,7 +235,7 @@ namespace NRpc.Serializer
         public ObjectId P7 { get; set; }
 
         public DataTable P8 { get; set; } = new DataTable("Test");
-
+        public DataSet P9 { get; set; } = new DataSet();
         public override string ToString()
         {
             if (P4 != null)
