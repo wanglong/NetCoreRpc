@@ -14,16 +14,9 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
     {
         public override byte[] GeteObjectBytes(object obj)
         {
-            if (obj == null)
-            {
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_ByteArray, ByteUtil.ZeroLengthBytes, ByteUtil.EmptyBytes);
-            }
-            else
-            {
-                var bytes = (byte[])obj;
-                var length = bytes.Length;
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_ByteArray, BitConverter.GetBytes(length), bytes);
-            }
+            var bytes = (byte[])obj;
+            var length = bytes.Length;
+            return ByteUtil.Combine(RpcSerializerUtil.Bytes_ByteArray, BitConverter.GetBytes(length), bytes);
         }
     }
 }

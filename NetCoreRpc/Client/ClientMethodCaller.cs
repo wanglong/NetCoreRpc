@@ -1,6 +1,7 @@
 ﻿using NetCoreRpc.Serializing;
 using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Utils;
+using NRpc;
 using System;
 using System.Reflection;
 using System.Text;
@@ -46,7 +47,7 @@ namespace NetCoreRpc.Client
             var client = RemotingClientFactory.GetClient(_proxyType);
             var requestInfo = Create(arrMethodArgs, argmentTypes, methodInfo);
             var response = client.InvokeSync(requestInfo, RemoteEndPointConfig.GetRequestTimeouMillis());
-            var result= HandleResponse(response, methodInfo);
+            var result = HandleResponse(response, methodInfo);
             LogUtil.InfoFormat("rpc Method CallBack：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
             return result;
         }

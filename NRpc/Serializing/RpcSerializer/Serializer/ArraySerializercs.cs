@@ -22,10 +22,6 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
 
         public override byte[] GeteObjectBytes(object obj)
         {
-            if (obj == null)
-            {
-                return NullBytes();
-            }
             var array = (Array)obj;
             var arrayTypeName = _type.GetElementType().FullName;
             var arrayTypeNameBytes = RpcSerializerUtil.EncodeString(arrayTypeName);

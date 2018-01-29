@@ -62,7 +62,6 @@ namespace NetCoreRpc.Application
         TestModel Test();
     }
 
-    [Serializable]
     public class TestModel
     {
         public int Age { get; set; }

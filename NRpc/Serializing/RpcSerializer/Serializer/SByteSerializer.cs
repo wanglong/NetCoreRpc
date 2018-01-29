@@ -14,24 +14,17 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
     {
         public override byte[] GeteObjectBytes(object obj)
         {
-            if (obj == null)
+            var value = (sbyte)obj;
+            int intValue = 0;
+            if (value < 0)
             {
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_SByte, ByteUtil.ZeroLengthBytes, ByteUtil.EmptyBytes);
+                intValue = (127 - (int)value);
             }
             else
             {
-                var value = (sbyte)obj;
-                int intValue = 0;
-                if (value < 0)
-                {
-                    intValue = (127 - (int)value);
-                }
-                else
-                {
-                    intValue = value;
-                }
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_SByte, BitConverter.GetBytes(intValue));
+                intValue = value;
             }
+            return ByteUtil.Combine(RpcSerializerUtil.Bytes_SByte, BitConverter.GetBytes(intValue));
         }
     }
 }

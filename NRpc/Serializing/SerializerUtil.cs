@@ -1,5 +1,6 @@
 ﻿using NRpc.Extensions;
 using NRpc.Serializing.Attributes;
+using NRpc.Serializing.RpcSerializer;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace NRpc.Serializing
     /// </summary>
     internal static class SerializerUtil
     {
-        private static readonly DefaultBinarySerializer _DefaultBinarySerializer = new DefaultBinarySerializer();
+        private static readonly RpcDefaultSerializer _DefaultBinarySerializer = new RpcDefaultSerializer();
 
         private static readonly JsonBinarySerializer _JsonBinarySerializer = new JsonBinarySerializer();
 
@@ -61,7 +62,7 @@ namespace NRpc.Serializing
                 {
                     return _DefaultBinarySerializer;
                 }
-                return _JsonBinarySerializer;
+                return _DefaultBinarySerializer;
             });
         }
     }

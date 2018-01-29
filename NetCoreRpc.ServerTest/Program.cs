@@ -6,7 +6,6 @@ using NetCoreRpc.Server;
 using NLog.Extensions.Logging;
 using System;
 using System.IO;
-using System.Reflection;
 
 namespace NetCoreRpc.ServerTest
 {

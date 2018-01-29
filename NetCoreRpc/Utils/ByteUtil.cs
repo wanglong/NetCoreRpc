@@ -36,6 +36,19 @@ namespace NetCoreRpc.Utils
             return BitConverter.GetBytes(data.Ticks);
         }
 
+        public static byte[] EncodeTimeSpan(TimeSpan timeSpan)
+        {
+            return BitConverter.GetBytes(timeSpan.Ticks);
+        }
+
+        public static char DecodeChar(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            var shortBytes = new byte[2];
+            Buffer.BlockCopy(sourceBuffer, startOffset, shortBytes, 0, 2);
+            nextStartOffset = startOffset + 2;
+            return BitConverter.ToChar(shortBytes, 0);
+        }
+
         public static string DecodeString(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
         {
             return Encoding.UTF8.GetString(DecodeBytes(sourceBuffer, startOffset, out nextStartOffset));
@@ -49,12 +62,49 @@ namespace NetCoreRpc.Utils
             return BitConverter.ToInt16(shortBytes, 0);
         }
 
+        public static ushort DecodeUShort(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            var shortBytes = new byte[2];
+            Buffer.BlockCopy(sourceBuffer, startOffset, shortBytes, 0, 2);
+            nextStartOffset = startOffset + 2;
+            return BitConverter.ToUInt16(shortBytes, 0);
+        }
+
+        public static byte DecodeByte(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            nextStartOffset = startOffset + 1;
+            return sourceBuffer[startOffset];
+        }
+
+        public static bool DecodeBool(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            nextStartOffset = startOffset + 1;
+            var value = sourceBuffer[startOffset];
+            return value == 1;
+        }
+
         public static int DecodeInt(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
         {
             var intBytes = new byte[4];
             Buffer.BlockCopy(sourceBuffer, startOffset, intBytes, 0, 4);
             nextStartOffset = startOffset + 4;
             return BitConverter.ToInt32(intBytes, 0);
+        }
+
+        public static uint DecodeUInt(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            var intBytes = new byte[4];
+            Buffer.BlockCopy(sourceBuffer, startOffset, intBytes, 0, 4);
+            nextStartOffset = startOffset + 4;
+            return BitConverter.ToUInt32(intBytes, 0);
+        }
+
+        public static float DecodeFloat(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            var intBytes = new byte[4];
+            Buffer.BlockCopy(sourceBuffer, startOffset, intBytes, 0, 4);
+            nextStartOffset = startOffset + 4;
+            return BitConverter.ToSingle(intBytes, 0);
         }
 
         public static long DecodeLong(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
@@ -65,12 +115,36 @@ namespace NetCoreRpc.Utils
             return BitConverter.ToInt64(longBytes, 0);
         }
 
+        public static ulong DecodeULong(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            var longBytes = new byte[8];
+            Buffer.BlockCopy(sourceBuffer, startOffset, longBytes, 0, 8);
+            nextStartOffset = startOffset + 8;
+            return BitConverter.ToUInt64(longBytes, 0);
+        }
+
+        public static double DecodeDouble(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            var longBytes = new byte[8];
+            Buffer.BlockCopy(sourceBuffer, startOffset, longBytes, 0, 8);
+            nextStartOffset = startOffset + 8;
+            return BitConverter.ToDouble(longBytes, 0);
+        }
+
         public static DateTime DecodeDateTime(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
         {
             var longBytes = new byte[8];
             Buffer.BlockCopy(sourceBuffer, startOffset, longBytes, 0, 8);
             nextStartOffset = startOffset + 8;
             return new DateTime(BitConverter.ToInt64(longBytes, 0));
+        }
+
+        public static TimeSpan DecodeTimeSpan(byte[] sourceBuffer, int startOffset, out int nextStartOffset)
+        {
+            var longBytes = new byte[8];
+            Buffer.BlockCopy(sourceBuffer, startOffset, longBytes, 0, 8);
+            nextStartOffset = startOffset + 8;
+            return new TimeSpan(BitConverter.ToInt64(longBytes, 0));
         }
 
         public static byte[] DecodeBytes(byte[] sourceBuffer, int startOffset, out int nextStartOffset)

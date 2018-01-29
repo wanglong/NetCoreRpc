@@ -23,10 +23,6 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
 
         public override byte[] GeteObjectBytes(object obj)
         {
-            if (obj == null)
-            {
-                return NullBytes();
-            }
             var typeNameBytes = RpcSerializerUtil.EncodeString(_type.FullName);
             var dic = (IDictionary)obj;
             var count = dic.Count;

@@ -13,20 +13,13 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
     {
         public override byte[] GeteObjectBytes(object obj)
         {
-            if (obj == null)
+            if ((bool)obj)
             {
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Bool, ByteUtil.ZeroLengthBytes, ByteUtil.EmptyBytes);
+                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Bool, new byte[1] { 1 });
             }
             else
             {
-                if ((bool)obj)
-                {
-                    return ByteUtil.Combine(RpcSerializerUtil.Bytes_Bool, new byte[1] { 1 });
-                }
-                else
-                {
-                    return ByteUtil.Combine(RpcSerializerUtil.Bytes_Bool, new byte[1] { 0 });
-                }
+                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Bool, new byte[1] { 0 });
             }
         }
     }

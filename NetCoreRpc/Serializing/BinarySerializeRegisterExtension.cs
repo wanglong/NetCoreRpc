@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using NetCoreRpc.Serializing.RpcSerializer;
 
 namespace NetCoreRpc.Serializing
 {
@@ -18,7 +19,7 @@ namespace NetCoreRpc.Serializing
 
         public static IServiceCollection UseDefaultMethodSerializer(this IServiceCollection serviceCollection)
         {
-            return serviceCollection.AddSingleton<IMethodCallSerializer, MethodCallSerializer>();
+            return serviceCollection.AddSingleton<IMethodCallSerializer, RpcDefaultSerializer>();
         }
 
         public static IServiceCollection UseDefaultResponseSerializer(this IServiceCollection serviceCollection)

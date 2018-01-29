@@ -1,6 +1,7 @@
 ﻿using NetCoreRpc.Serializing;
 using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Utils;
+using NRpc;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;

@@ -12,7 +12,7 @@ namespace NRpc.Utils
     /// 类功能描述：
     /// 创建标识：yjq 2018/1/17 20:13:59
     /// </summary>
-    public class ByteUtil
+    internal class ByteUtil
     {
         public static readonly byte[] ZeroLengthBytes = BitConverter.GetBytes(0);
         public static readonly byte[] EmptyBytes = new byte[0];

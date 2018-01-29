@@ -2,16 +2,14 @@
 using NRpc.Serializing.Attributes;
 using NRpc.Server;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace NRpc.ServerTest
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             Console.WriteLine("请输入监听端口:");
             var strPort = Console.ReadLine();
@@ -102,7 +100,6 @@ namespace NetCoreRpc.Application
         }
     }
 
-    [Serializable]
     public class TestModel
     {
         public int Age { get; set; }

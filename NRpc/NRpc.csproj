@@ -125,7 +125,7 @@
     <Compile Include="Serializing\RpcSerializer\Deserializer\UIntDeserializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Deserializer\ULongDeserializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Deserializer\UShortDeserializer.cs" />
-    <Compile Include="Serializing\RpcSerializer\RpcSerializer.cs" />
+    <Compile Include="Serializing\RpcSerializer\RpcDefaultSerializer.cs" />
     <Compile Include="Serializing\RpcSerializer\RpcSerializerConstants.cs" />
     <Compile Include="Serializing\RpcSerializer\SerializerFactory.cs" />
     <Compile Include="Serializing\RpcSerializer\Serializer\ArraySerializercs.cs" />

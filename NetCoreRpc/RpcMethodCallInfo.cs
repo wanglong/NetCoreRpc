@@ -2,7 +2,7 @@
 using System;
 using System.Reflection;
 
-namespace NetCoreRpc
+namespace NRpc
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。

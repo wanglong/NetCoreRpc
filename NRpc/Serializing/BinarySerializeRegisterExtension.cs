@@ -1,4 +1,6 @@
-﻿namespace NRpc.Serializing
+﻿using NRpc.Serializing.RpcSerializer;
+
+namespace NRpc.Serializing
 {
     /// <summary>
     /// Copyright (C) 2017 yjq 版权所有。
@@ -16,7 +18,7 @@
 
         public static DependencyManage UseDefaultMethodSerializer(this DependencyManage containerManager)
         {
-            return containerManager.RegisterType<IMethodCallSerializer, MethodCallSerializer>();
+            return containerManager.RegisterType<IMethodCallSerializer, RpcDefaultSerializer>();
         }
 
         public static DependencyManage UseDefaultResponseSerializer(this DependencyManage containerManager)

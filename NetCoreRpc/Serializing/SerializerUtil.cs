@@ -1,5 +1,6 @@
 ﻿using NetCoreRpc.Extensions;
 using NetCoreRpc.Serializing.Attributes;
+using NetCoreRpc.Serializing.RpcSerializer;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace NetCoreRpc.Serializing
     /// </summary>
     internal static class SerializerUtil
     {
-        private static readonly DefaultBinarySerializer _DefaultBinarySerializer = new DefaultBinarySerializer();
+        private static readonly RpcDefaultSerializer _DefaultBinarySerializer = new RpcDefaultSerializer();
 
         private static readonly JsonBinarySerializer _JsonBinarySerializer = new JsonBinarySerializer();
 
@@ -61,7 +62,7 @@ namespace NetCoreRpc.Serializing
                 {
                     return _DefaultBinarySerializer;
                 }
-                return _JsonBinarySerializer;
+                return _DefaultBinarySerializer;
             });
         }
     }

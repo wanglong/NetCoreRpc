@@ -21,16 +21,9 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
 
         public override byte[] GeteObjectBytes(object obj)
         {
-            if (obj == null)
-            {
-                return NullBytes();
-            }
-            else
-            {
-                var typeNameBytes = RpcSerializerUtil.EncodeString(_type.FullName);
-                var enumValue = ((Enum)obj).ToString();
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Enum, typeNameBytes, RpcSerializerUtil.EncodeString(enumValue));
-            }
+            var typeNameBytes = RpcSerializerUtil.EncodeString(_type.FullName);
+            var enumValue = ((Enum)obj).ToString();
+            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Enum, typeNameBytes, RpcSerializerUtil.EncodeString(enumValue));
         }
     }
 }
