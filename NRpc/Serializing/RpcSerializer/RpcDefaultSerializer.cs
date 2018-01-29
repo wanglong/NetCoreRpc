@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NRpc.Utils;
+using System;
 
 namespace NRpc.Serializing.RpcSerializer
 {
@@ -9,21 +10,44 @@ namespace NRpc.Serializing.RpcSerializer
     /// 类功能描述：RpcSerializer
     /// 创建标识：yjq 2018/1/28 20:05:57
     /// </summary>
-    internal sealed class RpcDefaultSerializer : IMethodCallSerializer
+    public sealed class RpcDefaultSerializer : IMethodCallSerializer
     {
+        private static readonly byte[] CompressedBytes = new byte[] { 1 };
+
+        private static readonly byte[] UnCompressedBytes = new byte[] { 0 };
+
         public object Deserialize(byte[] data, Type type)
         {
-            return SerializerFactory.Deserializer(data);
+            if (data[0] == 1)
+            {
+                var totalLength = data.Length - 1;
+                var needDecompressBytes = new byte[totalLength];
+                Buffer.BlockCopy(data, 1, needDecompressBytes, 0, totalLength);
+                var bytes = CompressionUtil.Decompress(needDecompressBytes);
+                return SerializerFactory.Deserializer(bytes);
+            }
+            else
+            {
+                return SerializerFactory.Deserializer(data, startOffset: 1);
+            }
         }
 
         public T Deserialize<T>(byte[] data) where T : class
         {
-            return (T)SerializerFactory.Deserializer(data);
+            return (T)Deserialize(data, typeof(T));
         }
 
         public byte[] Serialize(object obj)
         {
-            return SerializerFactory.Serializer(obj);
+            var data = SerializerFactory.Serializer(obj);
+            if (data.Length > 1024*5)
+            {
+                return ByteUtil.Combine(CompressedBytes, CompressionUtil.Compress(data));
+            }
+            else
+            {
+                return ByteUtil.Combine(UnCompressedBytes, data);
+            }
         }
     }
 }

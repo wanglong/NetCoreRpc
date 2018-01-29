@@ -1,6 +1,8 @@
-﻿using NRpc.Serializing.RpcSerializer;
+﻿using NRpc.Serializing;
+using NRpc.Serializing.RpcSerializer;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -10,7 +12,8 @@ namespace NRpc.Serializer
     {
         private static void Main(string[] args)
         {
-            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            CodeTimer.Time("Serializer", 10, new CodeTestClass().Action);
             //IEnumerator<>;
             //IEnumerable<>;
             //Console.WriteLine((typeof(TT)).FullName);
@@ -117,8 +120,58 @@ namespace NRpc.Serializer
                     P7 = ObjectId.GenerateNewId()
                 }
             };
-            var bytes = SerializerFactory.Serializer(test);
-            var obj = SerializerFactory.Deserializer(bytes);
+            var bytes = new RpcDefaultSerializer().Serialize(test);
+            //Console.WriteLine(bytes.Length);
+            var obj = new RpcDefaultSerializer().Deserialize<Test>(bytes);
+            Console.WriteLine(obj?.ToString());
+        }
+    }
+
+    public class JsonCodeTestClass : IAction
+    {
+        public void Action()
+        {
+            var test = new Test
+            {
+                P1 = null,
+                P2 = 2,
+                P3 = 3,
+                P4 = 4,
+                P5 = 5,
+                P6 = 6,
+                P7 = 7,
+                P8 = 8,
+                P9 = 9,
+                P10 = 10,
+                P11 = 'a',
+                P12 = false,
+                P13 = 1.1,
+                P14 = 2,
+                P15 = DateTime.Now,
+                P16 = TimeSpan.FromTicks(1025233),
+                P17 = string.Empty,
+                P18 = Encoding.UTF8.GetBytes("你好啊"),
+                P19 = new Aa
+                {
+                    P1 = 19,
+                    P2 = Sex.Woman,
+                    P3 = new int[][] {
+                        new int[]{ },new int[]{ 1,2,4,5}
+                    },
+                    P4 = new Dictionary<int, string>
+                    {
+                        [1] = "1",
+                        [2] = "2"
+                    },
+                    P5 = Enumerable.Range(0, 10),
+                    P6 = Guid.NewGuid(),
+                    P7 = ObjectId.GenerateNewId()
+                }
+            };
+            var bytes = new JsonBinarySerializer().Serialize(test);
+            //Console.WriteLine(bytes.Length);
+            var obj = new JsonBinarySerializer().Deserialize<Test>(bytes);
+            Console.WriteLine(obj?.ToString());
         }
     }
 
@@ -181,6 +234,8 @@ namespace NRpc.Serializer
 
         public ObjectId P7 { get; set; }
 
+        public DataTable P8 { get; set; } = new DataTable("Test");
+
         public override string ToString()
         {
             if (P4 != null)
@@ -193,6 +248,10 @@ namespace NRpc.Serializer
             if (P5 != null)
             {
                 Console.WriteLine(string.Join("|", P5));
+            }
+            if (P8 != null)
+            {
+                Console.WriteLine(P8.TableName);
             }
             return $"{P1},{P2},{string.Join(",", P3[1])},{P6.ToString()},{P7.ToString()}";
         }

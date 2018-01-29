@@ -1,5 +1,6 @@
 ﻿using NetCoreRpc.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
@@ -37,6 +38,10 @@ namespace NetCoreRpc.Utils
         public static readonly Type AsyncFunctionType = typeof(Task<>);
 
         public static readonly Type NullableType = typeof(Nullable<>);
+
+        public static readonly Type IEnumerableType = typeof(IEnumerable<>);
+
+        public static readonly Type IDictionaryType = typeof(IDictionary);
 
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, List<FieldInfo>> _FieldListDic = new ConcurrentDictionary<RuntimeTypeHandle, List<FieldInfo>>();
 

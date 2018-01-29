@@ -109,6 +109,8 @@
     <Compile Include="Serializing\RpcSerializer\Deserializer\ByteArrayDeserializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Deserializer\ByteDeserializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Deserializer\CharDeserializer.cs" />
+    <Compile Include="Serializing\RpcSerializer\Deserializer\DataSetDeserializer.cs" />
+    <Compile Include="Serializing\RpcSerializer\Deserializer\DataTableDeserializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Deserializer\DateTimeDeserializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Deserializer\DictionaryDeserializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Deserializer\DoubleDeserializer.cs" />
@@ -135,6 +137,8 @@
     <Compile Include="Serializing\RpcSerializer\Serializer\ByteArraySerializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Serializer\ByteSerializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Serializer\CharSerializer.cs" />
+    <Compile Include="Serializing\RpcSerializer\Serializer\DataSetSerializer.cs" />
+    <Compile Include="Serializing\RpcSerializer\Serializer\DataTableSerializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Serializer\DateTimeSerializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Serializer\DictionarySerializer.cs" />
     <Compile Include="Serializing\RpcSerializer\Serializer\DoubleSerializer.cs" />
@@ -200,6 +204,7 @@
     <Compile Include="Transport\Socketing\TcpConnection.cs" />
     <Compile Include="Transport\SocketRegisterExtension.cs" />
     <Compile Include="Utils\ByteUtil.cs" />
+    <Compile Include="Utils\CompressionUtil.cs" />
     <Compile Include="Utils\Ensure.cs" />
     <Compile Include="Utils\ExceptionUtil.cs" />
     <Compile Include="Utils\FileUtil.cs" />

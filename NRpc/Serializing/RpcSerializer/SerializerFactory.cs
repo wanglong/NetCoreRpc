@@ -1,7 +1,6 @@
 ﻿using NRpc.Serializing.RpcSerializer.Deserializer;
 using NRpc.Serializing.RpcSerializer.Serializer;
 using NRpc.Utils;
-using System.Collections;
 
 namespace NRpc.Serializing.RpcSerializer
 {
@@ -42,22 +41,23 @@ namespace NRpc.Serializing.RpcSerializer
                     {
                         return new ArraySerializercs(type).GeteObjectBytes(obj);
                     }
-                    else if (typeof(IDictionary).IsAssignableFrom(type))
+                    else if (TypeUtil.IDictionaryType.IsAssignableFrom(type))
                     {
                         return new DictionarySerializer(type).GeteObjectBytes(obj);
                     }
-                    else if (typeof(IEnumerable).IsAssignableFrom(type))
+                    else if (TypeUtil.IEnumerableType.IsAssignableFrom(type))
                     {
                         return new EnumerableSerializer(type).GeteObjectBytes(obj);
                     }
+
                     return new ObjectSerializer(type).GeteObjectBytes(obj);
                 }
             }
         }
 
-        public static object Deserializer(byte[] data)
+        public static object Deserializer(byte[] data, int startOffset = 0)
         {
-            return Deserializer(data, 0, out int nextStartOffset);
+            return Deserializer(data, startOffset, out int nextStartOffset);
         }
 
         internal static object Deserializer(byte[] data, int startOffset, out int nextStartOffset)

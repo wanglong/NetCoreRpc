@@ -22,7 +22,7 @@ namespace NRpc.Serializing.RpcSerializer.Deserializer
             {
                 var typeName = ByteUtil.DecodeString(objectByteData, 1, out int objDataStartOffset);
                 var type = RpcSerializerUtil.GetType(typeName);
-                var result = Activator.CreateInstance(type.Assembly.FullName, type.FullName).Unwrap();
+                var result = Activator.CreateInstance(type);
                 int objDataFieldStartOffset = objDataStartOffset;
                 SetObjectField(type.GetRpcFieldList(), result, objectByteData, objDataFieldStartOffset, objectByteData.Length, out objDataStartOffset);
                 return result;

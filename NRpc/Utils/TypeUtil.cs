@@ -1,7 +1,9 @@
 ﻿using NRpc.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -37,6 +39,12 @@ namespace NRpc.Utils
         public static readonly Type AsyncFunctionType = typeof(Task<>);
 
         public static readonly Type NullableType = typeof(Nullable<>);
+
+        public static readonly Type IEnumerableType = typeof(IEnumerable);
+
+        public static readonly Type IDictionaryType = typeof(IDictionary);
+
+        public static readonly Type DataTableType = typeof(DataTable);
 
         private static readonly ConcurrentDictionary<RuntimeTypeHandle, List<FieldInfo>> _FieldListDic = new ConcurrentDictionary<RuntimeTypeHandle, List<FieldInfo>>();
 

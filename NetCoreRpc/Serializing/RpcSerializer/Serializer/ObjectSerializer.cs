@@ -34,10 +34,14 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
             {
                 foreach (var fieldInfo in fieldList)
                 {
-                    var fieldNameBytes = RpcSerializerUtil.EncodeString(fieldInfo.Name);
-                    var fieldValueBytes = SerializerFactory.Serializer(fieldInfo.GetValue(obj));
-                    fieldByteList.Add(fieldNameBytes);
-                    fieldByteList.Add(fieldValueBytes);
+                    var fieldValue = fieldInfo.GetValue(obj);
+                    if (fieldValue != null)
+                    {
+                        var fieldNameBytes = RpcSerializerUtil.EncodeString(fieldInfo.Name);
+                        var fieldValueBytes = SerializerFactory.Serializer(fieldValue);
+                        fieldByteList.Add(fieldNameBytes);
+                        fieldByteList.Add(fieldValueBytes);
+                    }
                 }
             }
             var totalfieldBytes = ByteUtil.Combine(fieldByteList);

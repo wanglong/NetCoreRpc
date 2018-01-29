@@ -1,5 +1,4 @@
-﻿using NetCoreRpc.ZK;
-using System;
+﻿using System;
 
 namespace NetCoreRpc.Test
 {
@@ -8,7 +7,6 @@ namespace NetCoreRpc.Test
         private static void Main(string[] args)
         {
             Console.WriteLine("===");
-            ZkServerTest.StartAsync().Wait();
             Console.ReadLine();
         }
     }
