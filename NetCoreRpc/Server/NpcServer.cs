@@ -21,14 +21,14 @@ namespace NetCoreRpc.Server
         public NRpcServer(int port)
         {
             _iPEndPoint = new IPEndPoint(SocketUtils.GetLocalIPV4(), port);
-            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle());
+            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NetCoreRpcHandle());
             _routeCoordinator = DependencyManage.Resolve<ICoordinatorFactory>().Create();
         }
 
         public NRpcServer(string ip, int port)
         {
             _iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle());
+            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NetCoreRpcHandle());
         }
 
         public void Start(params string[] assemblyNameList)

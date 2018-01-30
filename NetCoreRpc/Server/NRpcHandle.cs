@@ -4,16 +4,16 @@ namespace NetCoreRpc.Server
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。
-    /// 类名：NRpcHandle.cs
+    /// 类名：NetCoreRpcHandle.cs
     /// 类属性：公共类（非静态）
     /// 类功能描述：
     /// 创建标识：yjq 2018/1/18 14:35:27
     /// </summary>
-    internal sealed class NRpcHandle : IRequestHandler
+    internal sealed class NetCoreRpcHandle : IRequestHandler
     {
         private readonly ServerMethodCaller _serverMethodCaller;
 
-        public NRpcHandle()
+        public NetCoreRpcHandle()
         {
             _serverMethodCaller = new ServerMethodCaller();
         }

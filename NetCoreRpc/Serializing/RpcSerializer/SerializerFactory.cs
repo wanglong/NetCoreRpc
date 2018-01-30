@@ -49,6 +49,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer
                     {
                         return new EnumerableSerializer(type).GeteObjectBytes(obj);
                     }
+
                     return new ObjectSerializer(type).GeteObjectBytes(obj);
                 }
             }

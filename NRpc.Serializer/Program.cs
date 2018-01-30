@@ -3,79 +3,70 @@ using NRpc.Serializing.RpcSerializer;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace NRpc.Serializer
 {
     internal class Program
     {
+        private delegate object CreateDelegate();
+
         private static void Main(string[] args)
         {
+            //var returnType = typeof(Test);
+            //var result = new Test();
+            //DynamicMethod convertMethod = Create(returnType);
+
+            //var action = (CreateDelegate)convertMethod.CreateDelegate(typeof(CreateDelegate));
+
+            //var value = action();
             //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
-            CodeTimer.Time("Serializer", 10, new CodeTestClass().Action);
-            //IEnumerator<>;
-            //IEnumerable<>;
-            //Console.WriteLine((typeof(TT)).FullName);
-            //Console.WriteLine(sizeof(Double));
-            //Console.WriteLine(sizeof(float));
-            //Console.WriteLine(sizeof(decimal));
-            //Console.WriteLine(typeof(byte[][]));
-            //var type = typeof(byte[][]);
-            //Console.WriteLine(type.GetElementType().Name);
-            //Console.ReadLine();
-            //var test = new Test
-            //{
-            //    P1 = null,
-            //    P2 = 2,
-            //    P3 = 3,
-            //    P4 = 4,
-            //    P5 = 5,
-            //    P6 = 6,
-            //    P7 = 7,
-            //    P8 = 8,
-            //    P9 = 9,
-            //    P10 = 10,
-            //    P11 = 'a',
-            //    P12 = false,
-            //    P13 = 1.1,
-            //    P14 = 2,
-            //    P15 = DateTime.Now,
-            //    P16 = TimeSpan.FromTicks(1025233),
-            //    P17 = "测试数据",
-            //    P18 = Encoding.UTF8.GetBytes("你好啊"),
-            //    P19 = new Aa
-            //    {
-            //        P1 = 19,
-            //        P2 = Sex.Woman,
-            //        P3 = new int[][] {
-            //            new int[]{ },new int[]{ 1,2,4,5}
-            //        },
-            //        P4 = new Dictionary<int, string>
-            //        {
-            //            [1] = "1",
-            //            [2] = "2"
-            //        },
-            //        P5 = Enumerable.Range(0, 10),
-            //        P6 = Guid.NewGuid(),
-            //        P7 = ObjectId.GenerateNewId()
-            //    }
-            //};
-            //Console.WriteLine(DateTime.Now.Ticks);
-            //for (int i = 0; i < 100000; i++)
-            //{
-            //    var bytes = SerializerFactory.Serializer(test);
-            //    //Console.WriteLine(bytes.Length);
-            //    var obj = SerializerFactory.Deserializer(bytes);
-            //}
-            //Console.WriteLine(DateTime.Now.Ticks);
-            //var bytes = SerializerFactory.Serializer(test);
-            //Console.WriteLine(bytes.Length);
-            //var obj = SerializerFactory.Deserializer(bytes);
-            //Console.WriteLine(obj?.ToString());
-            //var bytes2 = SerializerFactory.Serializer(null);
-            //var obj2 = SerializerFactory.Deserializer(bytes2);
+            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+
+            //CodeTimer.Time("stream", 100000, new StreamTestClass().Action);
+            //CodeTimer.Time("bytes", 100000, new ByteTestClass().Action);
+
             Console.ReadLine();
+        }
+    }
+
+    public class StreamTestClass : IAction
+    {
+        public void Action()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    stream.Write(BitConverter.GetBytes(i), 0, 4);
+                }
+                var bytes = stream.ToArray();
+            }
+        }
+    }
+
+    public class ByteTestClass : IAction
+    {
+        public void Action()
+        {
+            List<byte[]> arrays = new List<byte[]>();
+            for (int i = 0; i < 100; i++)
+            {
+                arrays.Add(BitConverter.GetBytes(i));
+            }
+            byte[] destination = new byte[arrays.Sum(x => x.Length)];
+            int offset = 0;
+            foreach (byte[] data in arrays)
+            {
+                Buffer.BlockCopy(data, 0, destination, offset, data.Length);
+                offset += data.Length;
+            }
         }
     }
 
@@ -123,7 +114,7 @@ namespace NRpc.Serializer
             var bytes = new RpcDefaultSerializer().Serialize(test);
             //Console.WriteLine(bytes.Length);
             var obj = new RpcDefaultSerializer().Deserialize<Test>(bytes);
-            Console.WriteLine(obj?.ToString());
+            //Console.WriteLine(obj?.ToString());
         }
     }
 
@@ -171,7 +162,7 @@ namespace NRpc.Serializer
             var bytes = new JsonBinarySerializer().Serialize(test);
             //Console.WriteLine(bytes.Length);
             var obj = new JsonBinarySerializer().Deserialize<Test>(bytes);
-            Console.WriteLine(obj?.ToString());
+            //Console.WriteLine(obj?.ToString());
         }
     }
 

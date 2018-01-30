@@ -10,7 +10,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer
     /// 类功能描述：RpcSerializer
     /// 创建标识：yjq 2018/1/28 20:05:57
     /// </summary>
-    internal sealed class RpcDefaultSerializer : IMethodCallSerializer
+    public sealed class RpcDefaultSerializer : IMethodCallSerializer
     {
         private static readonly byte[] CompressedBytes = new byte[] { 1 };
 

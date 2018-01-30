@@ -1,6 +1,6 @@
 ﻿using NetCoreRpc.Utils;
 using System;
-using System.Collections.Generic;
+using System.IO;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
@@ -23,18 +23,19 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
         public override byte[] GeteObjectBytes(object obj)
         {
             var array = (Array)obj;
-            var arrayTypeName = _type.GetElementType().FullName;
-            var arrayTypeNameBytes = RpcSerializerUtil.EncodeString(arrayTypeName);
-            var arrayCountBytes = BitConverter.GetBytes(array.Length);
-            List<byte[]> arrayByteList = new List<byte[]>();
-            foreach (var item in array)
+            using (MemoryStream stream = new MemoryStream())
             {
-                arrayByteList.Add(SerializerFactory.Serializer(item));
+                stream.WriteString(_type.GetElementType().FullName);
+                stream.Write(BitConverter.GetBytes(array.Length), 0, 4);
+                foreach (var item in array)
+                {
+                    var bytes = SerializerFactory.Serializer(item);
+                    stream.Write(bytes, 0, bytes.Length);
+                }
+                var arrayBytes = stream.ToArray();
+                var objLengthBytes = BitConverter.GetBytes(arrayBytes.Length);
+                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Array, objLengthBytes, arrayBytes);
             }
-            var totalfieldBytes = ByteUtil.Combine(arrayByteList);
-            var objBytesLength = totalfieldBytes.Length + arrayTypeNameBytes.Length + 4;
-            var objLengthBytes = BitConverter.GetBytes(objBytesLength);
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Array, objLengthBytes, arrayTypeNameBytes, arrayCountBytes, totalfieldBytes);
         }
     }
 }

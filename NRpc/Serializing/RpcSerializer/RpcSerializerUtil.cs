@@ -2,6 +2,8 @@
 using NRpc.Utils;
 using System;
 using System.Collections.Concurrent;
+using System.IO;
+using System.Text;
 
 namespace NRpc.Serializing.RpcSerializer
 {
@@ -30,6 +32,30 @@ namespace NRpc.Serializing.RpcSerializer
             return ByteUtil.Combine(Bytes_Object, ByteUtil.ZeroLengthBytes, ByteUtil.EmptyBytes);
         }
 
+        public static MemoryStream WriteString(this MemoryStream stream, string data)
+        {
+            stream.Write(Bytes_String, 0, 1);
+            if (data != null)
+            {
+                var dataBytes = Encoding.UTF8.GetBytes(data);
+                var lengthBytes = BitConverter.GetBytes(dataBytes.Length);
+                stream.Write(lengthBytes, 0, 4);
+                stream.Write(dataBytes, 0, dataBytes.Length);
+            }
+            else
+            {
+                return stream.WriteNull();
+            }
+            return stream;
+        }
+
+        public static MemoryStream WriteNull(this MemoryStream stream)
+        {
+            stream.Write(ByteUtil.ZeroLengthBytes, 0, 4);
+            stream.Write(ByteUtil.EmptyBytes, 0, 0);
+            return stream;
+        }
+
         private static ConcurrentDictionary<string, RuntimeTypeHandle> _RuntimeTypeHandleDic = new ConcurrentDictionary<string, RuntimeTypeHandle>();
 
         public static Type GetType(string typeName)
@@ -48,6 +74,11 @@ namespace NRpc.Serializing.RpcSerializer
                  throw new Exception("not fount typename " + typeName);
              });
             return Type.GetTypeFromHandle(typeHandle);
+        }
+
+        public static object CreateInstance(Type returnType)
+        {
+            return Activator.CreateInstance(returnType);
         }
     }
 }

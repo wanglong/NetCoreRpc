@@ -1,4 +1,5 @@
 ﻿using NetCoreRpc.Utils;
+using System.IO;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
@@ -16,6 +17,13 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
         public byte[] NullBytes()
         {
             return ByteUtil.Combine(RpcSerializerUtil.Bytes_Object, ByteUtil.ZeroLengthBytes, ByteUtil.EmptyBytes);
+        }
+
+        public void WriteNullBytes(MemoryStream memoryStream)
+        {
+            memoryStream.WriteByte(RpcSerializerUtil.Byte_Object);
+            memoryStream.Write(ByteUtil.ZeroLengthBytes, 0, 4);
+            memoryStream.Write(ByteUtil.EmptyBytes, 0, ByteUtil.EmptyBytes.Length);
         }
     }
 }

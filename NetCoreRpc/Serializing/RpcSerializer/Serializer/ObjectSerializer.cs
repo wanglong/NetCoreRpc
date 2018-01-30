@@ -1,6 +1,6 @@
 ﻿using NetCoreRpc.Utils;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
@@ -27,27 +27,26 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
             {
                 return NullBytes();
             }
-            var typeNameBytes = RpcSerializerUtil.EncodeString(_type.FullName);
-            var fieldList = _type.GetRpcFieldList();
-            List<byte[]> fieldByteList = new List<byte[]>();
-            if (fieldList != null && fieldList.Any())
+            using (MemoryStream stream = new MemoryStream())
             {
-                foreach (var fieldInfo in fieldList)
+                stream.WriteString(_type.FullName);
+                var fieldList = _type.GetRpcFieldList();
+                if (fieldList != null && fieldList.Any())
                 {
-                    var fieldValue = fieldInfo.GetValue(obj);
-                    if (fieldValue != null)
+                    foreach (var fieldInfo in fieldList)
                     {
-                        var fieldNameBytes = RpcSerializerUtil.EncodeString(fieldInfo.Name);
-                        var fieldValueBytes = SerializerFactory.Serializer(fieldValue);
-                        fieldByteList.Add(fieldNameBytes);
-                        fieldByteList.Add(fieldValueBytes);
+                        var fieldValue = fieldInfo.GetValue(obj);
+                        if (fieldValue != null)
+                        {
+                            var fieldValueBytes = SerializerFactory.Serializer(fieldValue);
+                            stream.WriteString(fieldInfo.Name);
+                            stream.Write(fieldValueBytes, 0, fieldValueBytes.Length);
+                        }
                     }
                 }
+                var objBytes = stream.ToArray();
+                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Object, BitConverter.GetBytes(objBytes.Length), objBytes);
             }
-            var totalfieldBytes = ByteUtil.Combine(fieldByteList);
-            var objBytesLength = typeNameBytes.Length + totalfieldBytes.Length;
-            var objLengthBytes = BitConverter.GetBytes(objBytesLength);
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Object, objLengthBytes, typeNameBytes, totalfieldBytes);
         }
     }
 }

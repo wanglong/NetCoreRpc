@@ -105,7 +105,6 @@ namespace NetCoreRpc.Serializing.RpcSerializer
         public static readonly byte Byte_Enumerable = (byte)Char_Enumerable;
         public static readonly byte[] Bytes_Enumerable = new byte[1] { Byte_Enumerable };
 
-
         public static readonly char Char_DataTable = 'x';
         public static readonly byte Byte_DataTable = (byte)Char_DataTable;
         public static readonly byte[] Bytes_DataTable = new byte[1] { Byte_DataTable };
