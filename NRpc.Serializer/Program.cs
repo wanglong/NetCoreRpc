@@ -23,11 +23,15 @@ namespace NRpc.Serializer
             //var action = (CreateDelegate)convertMethod.CreateDelegate(typeof(CreateDelegate));
 
             //var value = action();
-            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
             CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
             CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
             CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
             CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
 
             //CodeTimer.Time("stream", 100000, new StreamTestClass().Action);
             //CodeTimer.Time("bytes", 100000, new ByteTestClass().Action);
@@ -46,7 +50,6 @@ namespace NRpc.Serializer
                 {
                     stream.Write(BitConverter.GetBytes(i), 0, 4);
                 }
-                var bytes = stream.ToArray();
             }
         }
     }
@@ -55,17 +58,15 @@ namespace NRpc.Serializer
     {
         public void Action()
         {
-            List<byte[]> arrays = new List<byte[]>();
-            for (int i = 0; i < 100; i++)
+            using (MemoryStream stream = new MemoryStream())
             {
-                arrays.Add(BitConverter.GetBytes(i));
-            }
-            byte[] destination = new byte[arrays.Sum(x => x.Length)];
-            int offset = 0;
-            foreach (byte[] data in arrays)
-            {
-                Buffer.BlockCopy(data, 0, destination, offset, data.Length);
-                offset += data.Length;
+                for (int i = 0; i < 100; i++)
+                {
+                    foreach (var item in BitConverter.GetBytes(i))
+                    {
+                        stream.WriteByte(item);
+                    }
+                }
             }
         }
     }
@@ -113,7 +114,7 @@ namespace NRpc.Serializer
             };
             var bytes = new RpcDefaultSerializer().Serialize(test);
             //Console.WriteLine(bytes.Length);
-            var obj = new RpcDefaultSerializer().Deserialize<Test>(bytes);
+            //var obj = new RpcDefaultSerializer().Deserialize<Test>(bytes);
             //Console.WriteLine(obj?.ToString());
         }
     }
@@ -161,7 +162,7 @@ namespace NRpc.Serializer
             };
             var bytes = new JsonBinarySerializer().Serialize(test);
             //Console.WriteLine(bytes.Length);
-            var obj = new JsonBinarySerializer().Deserialize<Test>(bytes);
+            //var obj = new JsonBinarySerializer().Deserialize<Test>(bytes);
             //Console.WriteLine(obj?.ToString());
         }
     }
