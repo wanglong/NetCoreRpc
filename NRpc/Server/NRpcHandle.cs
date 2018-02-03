@@ -13,9 +13,9 @@ namespace NRpc.Server
     {
         private readonly ServerMethodCaller _serverMethodCaller;
 
-        public NRpcHandle()
+        public NRpcHandle(IServerFilter serverFilter)
         {
-            _serverMethodCaller = new ServerMethodCaller();
+            _serverMethodCaller = new ServerMethodCaller(serverFilter);
         }
 
         public RemotingResponse HandleRequest(IRequestHandlerContext context, RemotingRequest remotingRequest)

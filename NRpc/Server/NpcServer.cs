@@ -17,20 +17,28 @@ namespace NRpc.Server
     public class NRpcServer
     {
         private IPEndPoint _iPEndPoint;
-        private readonly SocketRemotingServer _socketRemotingServer;
+        private SocketRemotingServer _socketRemotingServer;
         private readonly IRouteCoordinator _routeCoordinator;
+        private IServerFilter _gloabFilter;
 
-        public NRpcServer(int port)
+        public NRpcServer(int port) : this(SocketUtils.GetLocalIPV4(), port)
         {
-            _iPEndPoint = new IPEndPoint(SocketUtils.GetLocalIPV4(), port);
-            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle());
+        }
+
+        public NRpcServer(IPAddress ip, int port)
+        {
+            _iPEndPoint = new IPEndPoint(ip, port);
+
             _routeCoordinator = DependencyManage.Resolve<ICoordinatorFactory>().Create();
         }
 
-        public NRpcServer(string ip, int port)
+        public NRpcServer(string ip, int port) : this(IPAddress.Parse(ip), port)
         {
-            _iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle());
+        }
+
+        public void RegisterFilter<T>(T filter) where T : IServerFilter
+        {
+            _gloabFilter = filter;
         }
 
         public void RegisterServerType(params Type[] serverType)
@@ -48,6 +56,7 @@ namespace NRpc.Server
 
         public void Start()
         {
+            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle(_gloabFilter));
             NRpcConfigWatcher.Install();
             _socketRemotingServer.Start();
             _routeCoordinator.RegisterAsync(_iPEndPoint).Wait();

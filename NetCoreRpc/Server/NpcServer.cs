@@ -1,6 +1,7 @@
 ﻿using NetCoreRpc.ServerRoute;
 using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Transport.Socketing;
+using System;
 using System.Net;
 
 namespace NetCoreRpc.Server
@@ -15,25 +16,42 @@ namespace NetCoreRpc.Server
     public class NRpcServer
     {
         private IPEndPoint _iPEndPoint;
-        private readonly SocketRemotingServer _socketRemotingServer;
+        private SocketRemotingServer _socketRemotingServer;
         private readonly IRouteCoordinator _routeCoordinator;
+        private IServerFilter _gloabFilter;
 
-        public NRpcServer(int port)
+        public NRpcServer(int port) : this(SocketUtils.GetLocalIPV4(), port)
         {
-            _iPEndPoint = new IPEndPoint(SocketUtils.GetLocalIPV4(), port);
-            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NetCoreRpcHandle());
+        }
+
+        public NRpcServer(IPAddress ip, int port)
+        {
+            _iPEndPoint = new IPEndPoint(ip, port);
+
             _routeCoordinator = DependencyManage.Resolve<ICoordinatorFactory>().Create();
         }
 
-        public NRpcServer(string ip, int port)
+        public NRpcServer(string ip, int port) : this(IPAddress.Parse(ip), port)
         {
-            _iPEndPoint = new IPEndPoint(IPAddress.Parse(ip), port);
-            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NetCoreRpcHandle());
+        }
+
+        public void RegisterFilter<T>(T filter) where T : IServerFilter
+        {
+            _gloabFilter = filter;
+        }
+
+        public void RegisterServerType(params Type[] serverType)
+        {
+            foreach (var item in serverType)
+            {
+                ServerAssemblyUtil.InstallType(item);
+            }
         }
 
         public void Start(params string[] assemblyNameList)
         {
             ServerAssemblyUtil.AddAssemblyList(assemblyNameList);
+            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle(_gloabFilter));
             _socketRemotingServer.Start();
             _routeCoordinator.RegisterAsync(_iPEndPoint).Wait();
         }

@@ -33,7 +33,6 @@ namespace NetCoreRpc.Server
             }
             return null;
         }
-
         public static void AddAssemblyList(params string[] assemblyNameList)
         {
             if (assemblyNameList != null)
@@ -48,17 +47,27 @@ namespace NetCoreRpc.Server
         public static void Add(string assemblyName)
         {
             var assembly = Assembly.Load(assemblyName);
+            InstallAssembly(assembly);
+        }
+
+        public static void InstallAssembly(Assembly assembly)
+        {
             if (assembly != null)
             {
                 foreach (var item in assembly.GetTypes())
                 {
-                    if (!_RuntimeTypeDic.ContainsKey(item.FullName))
-                    {
-                        _RuntimeTypeDic.Add(item.FullName, item.TypeHandle);
-                    }
-                    InstallMethod(item);
+                    InstallType(item);
                 }
             }
+        }
+
+        public static void InstallType(Type type)
+        {
+            if (!_RuntimeTypeDic.ContainsKey(type.FullName))
+            {
+                _RuntimeTypeDic.Add(type.FullName, type.TypeHandle);
+            }
+            InstallMethod(type);
         }
 
         public static MethodBase GetMethod(string methodName, Type declaringType)

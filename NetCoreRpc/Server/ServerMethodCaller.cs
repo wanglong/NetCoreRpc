@@ -6,6 +6,8 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using NRpc;
+using System.Collections.Concurrent;
+using NetCoreRpc.Extensions;
 
 namespace NetCoreRpc.Server
 {
@@ -22,6 +24,44 @@ namespace NetCoreRpc.Server
         /// 异步方法处理
         /// </summary>
         private static readonly MethodInfo HandleAsyncMethodInfo = typeof(ServerMethodCaller).GetMethod("ExecuteAsyncResultAction", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        private readonly IServerFilter _serverFilter;
+
+        public ServerMethodCaller(IServerFilter serverFilter)
+        {
+            _serverFilter = serverFilter;
+        }
+
+        private void OnActionExecuting(MethodInfo methodInfo, object[] param)
+        {
+            try
+            {
+                GetFilter(methodInfo)?.OnActionExecuting(methodInfo, param);
+            }
+            catch { }
+        }
+
+        private void OnActionExecuted(MethodInfo methodInfo)
+        {
+            try
+            {
+                GetFilter(methodInfo)?.OnActionExecuted(methodInfo);
+            }
+            catch { }
+        }
+
+        private void HandleException(MethodInfo methodInfo, Exception ex)
+        {
+            try
+            {
+                var filter = GetFilter(methodInfo);
+                if (filter != null)
+                {
+                    filter.HandleException(methodInfo, ex);
+                }
+            }
+            catch { }
+        }
 
         /// <summary>
         /// 请求处理
@@ -97,6 +137,39 @@ namespace NetCoreRpc.Server
         private byte[] GetBody(object obj, MethodInfo methodInfo)
         {
             return DependencyManage.Resolve<IResponseSerailizer>().Serialize(obj, methodInfo);
+        }
+        private static readonly ConcurrentDictionary<RuntimeMethodHandle, IServerFilter> _FilterDic = new ConcurrentDictionary<RuntimeMethodHandle, IServerFilter>();
+
+        private IServerFilter GetFilter(MethodInfo methodInfo)
+        {
+            return _FilterDic.GetValue(methodInfo.MethodHandle, () =>
+            {
+                var attributes = methodInfo.GetCustomAttributes();
+                if (attributes != null)
+                {
+                    foreach (Attribute item in attributes)
+                    {
+                        var attribute = item as IServerFilter;
+                        if (attribute != null)
+                        {
+                            return attribute;
+                        }
+                    }
+                }
+                var classAttribute = methodInfo.DeclaringType.GetCustomAttributes();
+                if (classAttribute != null)
+                {
+                    foreach (Attribute item in classAttribute)
+                    {
+                        var attribute = item as IServerFilter;
+                        if (attribute != null)
+                        {
+                            return attribute;
+                        }
+                    }
+                }
+                return _serverFilter;
+            });
         }
     }
 }

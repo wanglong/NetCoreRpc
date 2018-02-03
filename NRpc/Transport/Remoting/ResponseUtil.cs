@@ -28,6 +28,11 @@ namespace NRpc.Transport.Remoting
             return new RemotingResponse(remotingRequest.Type, remotingRequest.Code, remotingRequest.Sequence, remotingRequest.CreatedTime, ResponseState.Error, DealErrorResponseBody, DateTime.Now, remotingRequest.Header, null);
         }
 
+        public static RemotingResponse CreateDealErrorResponse(this RemotingRequest remotingRequest, byte[] data)
+        {
+            return new RemotingResponse(remotingRequest.Type, remotingRequest.Code, remotingRequest.Sequence, remotingRequest.CreatedTime, ResponseState.Error, data, DateTime.Now, remotingRequest.Header, null);
+        }
+
         /// <summary>
         /// 创建未找到方法的RemotingResponse
         /// </summary>

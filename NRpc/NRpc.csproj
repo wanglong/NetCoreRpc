@@ -165,6 +165,7 @@
     <Compile Include="ServerRoute\ZK\ZkCoordinator.cs" />
     <Compile Include="ServerRoute\ZK\ZkCoordinatorFactory.cs" />
     <Compile Include="ServerRoute\ZK\ZkManager.cs" />
+    <Compile Include="Server\IServerFilter.cs" />
     <Compile Include="Server\NpcServer.cs" />
     <Compile Include="Server\NRpcHandle.cs" />
     <Compile Include="Server\ServerAssemblyUtil.cs" />

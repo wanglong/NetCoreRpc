@@ -1,7 +1,9 @@
-﻿using NRpc.Serializing;
+﻿using NRpc.Extensions;
+using NRpc.Serializing;
 using NRpc.Transport.Remoting;
 using NRpc.Utils;
 using System;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -21,6 +23,44 @@ namespace NRpc.Server
         /// </summary>
         private static readonly MethodInfo HandleAsyncMethodInfo = typeof(ServerMethodCaller).GetMethod("ExecuteAsyncResultAction", BindingFlags.Instance | BindingFlags.NonPublic);
 
+        private readonly IServerFilter _serverFilter;
+
+        public ServerMethodCaller(IServerFilter serverFilter)
+        {
+            _serverFilter = serverFilter;
+        }
+
+        private void OnActionExecuting(MethodInfo methodInfo, object[] param)
+        {
+            try
+            {
+                GetFilter(methodInfo)?.OnActionExecuting(methodInfo, param);
+            }
+            catch { }
+        }
+
+        private void OnActionExecuted(MethodInfo methodInfo)
+        {
+            try
+            {
+                GetFilter(methodInfo)?.OnActionExecuted(methodInfo);
+            }
+            catch { }
+        }
+
+        private void HandleException(MethodInfo methodInfo, Exception ex)
+        {
+            try
+            {
+                var filter = GetFilter(methodInfo);
+                if (filter != null)
+                {
+                    filter.HandleException(methodInfo, ex);
+                }
+            }
+            catch { }
+        }
+
         /// <summary>
         /// 请求处理
         /// </summary>
@@ -33,10 +73,11 @@ namespace NRpc.Server
             using (var scope = DependencyManage.BeginLeftScope())
             {
                 var obj = scope.Resolve(classType);
+                MethodInfo executeMethodInfo = null;
                 try
                 {
                     LogUtil.InfoFormat("Begin Deal Rpc Request:{0}-{1}", requestMethodInfo.TypeName, requestMethodInfo.MethodName);
-                    var executeMethodInfo = ServerAssemblyUtil.GetMethod(requestMethodInfo.MethodName, classType) as MethodInfo;
+                    executeMethodInfo = ServerAssemblyUtil.GetMethod(requestMethodInfo.MethodName, classType) as MethodInfo;
                     if (executeMethodInfo == null)
                     {
                         LogUtil.Info($"Not found Method{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName}");
@@ -45,6 +86,7 @@ namespace NRpc.Server
                     else
                     {
                         var delegateType = executeMethodInfo.GetMethodReturnType();
+                        OnActionExecuting(executeMethodInfo, requestMethodInfo.Parameters);
                         var executeResult = executeMethodInfo.Invoke(obj, requestMethodInfo.Parameters);
                         RemotingResponse remotingResponse;
                         if (delegateType == MethodType.SyncAction)
@@ -69,12 +111,14 @@ namespace NRpc.Server
                             remotingResponse = remotingRequest.CreateSuccessResponse(GetBody(result, executeMethodInfo));
                         }
                         LogUtil.InfoFormat("Rpc Method Dealed:{0}-{1}", requestMethodInfo.TypeName, requestMethodInfo.MethodName);
+                        OnActionExecuted(executeMethodInfo);
                         return remotingResponse;
                     }
                 }
                 catch (Exception e)
                 {
                     LogUtil.Error($"excute{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName} failed", e);
+                    HandleException(executeMethodInfo, e);
                     return remotingRequest.CreateDealErrorResponse();
                 }
             }
@@ -95,6 +139,40 @@ namespace NRpc.Server
         private byte[] GetBody(object obj, MethodInfo methodInfo)
         {
             return DependencyManage.Resolve<IResponseSerailizer>().Serialize(obj, methodInfo);
+        }
+
+        private static readonly ConcurrentDictionary<RuntimeMethodHandle, IServerFilter> _FilterDic = new ConcurrentDictionary<RuntimeMethodHandle, IServerFilter>();
+
+        private IServerFilter GetFilter(MethodInfo methodInfo)
+        {
+            return _FilterDic.GetValue(methodInfo.MethodHandle, () =>
+            {
+                var attributes = methodInfo.GetCustomAttributes();
+                if (attributes != null)
+                {
+                    foreach (Attribute item in attributes)
+                    {
+                        var attribute = item as IServerFilter;
+                        if (attribute != null)
+                        {
+                            return attribute;
+                        }
+                    }
+                }
+                var classAttribute = methodInfo.DeclaringType.GetCustomAttributes();
+                if (classAttribute != null)
+                {
+                    foreach (Attribute item in classAttribute)
+                    {
+                        var attribute = item as IServerFilter;
+                        if (attribute != null)
+                        {
+                            return attribute;
+                        }
+                    }
+                }
+                return _serverFilter;
+            });
         }
     }
 }
