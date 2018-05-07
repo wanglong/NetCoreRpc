@@ -20,3 +20,7 @@
 /NRpc.ServerTest/bin
 /NRpc.Serializer/obj
 /NRpc.Serializer/bin
+/NRpcSerializer/obj
+/NRpcSerializer/bin
+/NRpcSerializer.Test/obj
+/NRpcSerializer.Test/bin

@@ -23,15 +23,15 @@ namespace NRpc.Serializer
             //var action = (CreateDelegate)convertMethod.CreateDelegate(typeof(CreateDelegate));
 
             //var value = action();
-            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
-            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
-            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
-            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
-            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
-            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
-            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
-            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
-            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            CodeTimer.Time("Serializer", 1, new CodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            //CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            //CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            //CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
 
             //CodeTimer.Time("stream", 100000, new StreamTestClass().Action);
             //CodeTimer.Time("bytes", 100000, new ByteTestClass().Action);
@@ -75,46 +75,25 @@ namespace NRpc.Serializer
     {
         public void Action()
         {
-            var test = new Test
+            var test = new Aa
             {
-                P1 = null,
-                P2 = 2,
-                P3 = 3,
-                P4 = 4,
-                P5 = 5,
-                P6 = 6,
-                P7 = 7,
-                P8 = 8,
-                P9 = 9,
-                P10 = 10,
-                P11 = 'a',
-                P12 = false,
-                P13 = 1.1,
-                P14 = 2,
-                P15 = DateTime.Now,
-                P16 = TimeSpan.FromTicks(1025233),
-                P17 = "测试数据",
-                P18 = Encoding.UTF8.GetBytes("你好啊"),
-                P19 = new Aa
-                {
-                    P1 = 19,
-                    P2 = Sex.Woman,
-                    P3 = new int[][] {
-                        new int[]{ },new int[]{ 1,2,4,5}
-                    },
-                    P4 = new Dictionary<int, string>
-                    {
-                        [1] = "1",
-                        [2] = "2"
-                    },
-                    P5 = Enumerable.Range(0, 10),
-                    P6 = Guid.NewGuid(),
-                    P7 = ObjectId.GenerateNewId()
-                }
+                //P1 = 19,
+                //P2 = Sex.Woman,
+                //P3 = new int[][] {
+                //    new int[]{ },new int[]{ 1,2,4,5}
+                //},
+                //P4 = new Dictionary<int, string>
+                //{
+                //    [1] = "1",
+                //    [2] = "2"
+                //},
+                P5 = Enumerable.Range(0, 10),
+                //P6 = Guid.NewGuid(),
+                //P7 = ObjectId.GenerateNewId()
             };
             var bytes = new RpcDefaultSerializer().Serialize(test);
             //Console.WriteLine(bytes.Length);
-            //var obj = new RpcDefaultSerializer().Deserialize<Test>(bytes);
+            var obj = new RpcDefaultSerializer().Deserialize<Test>(bytes);
             //Console.WriteLine(obj?.ToString());
         }
     }

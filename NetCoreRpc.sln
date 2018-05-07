@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NRpc.ServerTest", "NRpc.Ser
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NRpc.Serializer", "NRpc.Serializer\NRpc.Serializer.csproj", "{196BD708-B065-47F6-ACD6-A50730A392CB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NRpcSerializer", "NRpcSerializer\NRpcSerializer.csproj", "{50C92669-0031-4CF8-ADAD-9D0324EC175A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NRpcSerializer.Test", "NRpcSerializer.Test\NRpcSerializer.Test.csproj", "{2A46ADEA-09DE-43C5-9FFF-C0B1947ACB8A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +63,14 @@ Global
 		{196BD708-B065-47F6-ACD6-A50730A392CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{196BD708-B065-47F6-ACD6-A50730A392CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{196BD708-B065-47F6-ACD6-A50730A392CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50C92669-0031-4CF8-ADAD-9D0324EC175A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50C92669-0031-4CF8-ADAD-9D0324EC175A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50C92669-0031-4CF8-ADAD-9D0324EC175A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50C92669-0031-4CF8-ADAD-9D0324EC175A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A46ADEA-09DE-43C5-9FFF-C0B1947ACB8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A46ADEA-09DE-43C5-9FFF-C0B1947ACB8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A46ADEA-09DE-43C5-9FFF-C0B1947ACB8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A46ADEA-09DE-43C5-9FFF-C0B1947ACB8A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,13 +1,11 @@
-﻿using NetCoreRpc.Utils;
+﻿using NRpcSerializer.Utils;
 
-namespace NetCoreRpc.Serializing.RpcSerializer.Deserializer
+namespace NRpcSerializer.Deserializer
 {
     /// <summary>
-    /// Copyright (C) 2018 备胎 版权所有。
     /// 类名：SByteDeserializer.cs
-    /// 类属性：公共类（非静态）
     /// 类功能描述：
-    /// 创建标识：yjq 2018/1/26 14:01:50
+    /// 创建标识：yjq 2018/5/7 16:47:34
     /// </summary>
     public sealed class SByteDeserializer : BaseDeserializer
     {
@@ -16,7 +14,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Deserializer
             var intValue = ByteUtil.DecodeInt(inputBytes, startOffset, out nextStartOffset);
             if (intValue > 127)
             {
-                return 127 - intValue;
+                return (sbyte)(127 - intValue);
             }
             else
             {
