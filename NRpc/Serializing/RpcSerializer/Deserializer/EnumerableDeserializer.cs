@@ -20,7 +20,7 @@ namespace NRpc.Serializing.RpcSerializer.Deserializer
             var dicBytesData = ByteUtil.DecodeBytes(inputBytes, startOffset, out nextStartOffset);
             if (dicBytesData.Length > 0)
             {
-                var typeName = RpcSerializerUtil.DecodeString(dicBytesData, 0, out int arrayDataStartOffset);
+                var typeName = ByteUtil.DecodeString(dicBytesData, 0, out int arrayDataStartOffset);
                 int arrayDataFieldStartOffset = arrayDataStartOffset;
                 var count = ByteUtil.DecodeInt(dicBytesData, arrayDataFieldStartOffset, out arrayDataStartOffset);
                 arrayDataFieldStartOffset = arrayDataStartOffset;

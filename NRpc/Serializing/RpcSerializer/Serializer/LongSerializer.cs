@@ -1,7 +1,4 @@
-﻿using NRpc.Utils;
-using System;
-
-namespace NRpc.Serializing.RpcSerializer.Serializer
+﻿namespace NRpc.Serializing.RpcSerializer.Serializer
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。
@@ -12,9 +9,10 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class LongSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Long, BitConverter.GetBytes((long)obj));
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Long);
+            serializerInputStream.Write((long)obj);
         }
     }
 }

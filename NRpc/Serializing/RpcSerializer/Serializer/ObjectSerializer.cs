@@ -1,6 +1,5 @@
 ﻿using NRpc.Utils;
 using System;
-using System.IO;
 using System.Linq;
 
 namespace NRpc.Serializing.RpcSerializer.Serializer
@@ -21,15 +20,19 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
             _type = type;
         }
 
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Object);
             if (obj == null)
             {
-                return NullBytes();
+                serializerInputStream.Write(ByteUtil.ZeroLengthBytes);
+                serializerInputStream.Write(ByteUtil.EmptyBytes);
             }
-            using (MemoryStream stream = new MemoryStream())
+            else
             {
-                stream.WriteString(_type.FullName);
+                var startLength = serializerInputStream.Length;
+                serializerInputStream.Write(0);//当前流长度占位
+                serializerInputStream.Write(_type.FullName);
                 var fieldList = _type.GetRpcFieldList();
                 if (fieldList != null && fieldList.Any())
                 {
@@ -38,14 +41,12 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
                         var fieldValue = fieldInfo.GetValue(obj);
                         if (fieldValue != null)
                         {
-                            var fieldValueBytes = SerializerFactory.Serializer(fieldValue);
-                            stream.WriteString(fieldInfo.Name);
-                            stream.Write(fieldValueBytes, 0, fieldValueBytes.Length);
+                            serializerInputStream.Write(fieldInfo.Name);
+                            SerializerFactory.Serializer(fieldValue, serializerInputStream);
                         }
                     }
                 }
-                var objBytes = stream.ToArray();
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Object, BitConverter.GetBytes(objBytes.Length), objBytes);
+                serializerInputStream.UpdateCurrentLength(serializerInputStream.Length - startLength - 4, startLength);//填补流长度
             }
         }
     }

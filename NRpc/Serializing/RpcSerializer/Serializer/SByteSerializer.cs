@@ -1,7 +1,4 @@
-﻿using NRpc.Utils;
-using System;
-
-namespace NRpc.Serializing.RpcSerializer.Serializer
+﻿namespace NRpc.Serializing.RpcSerializer.Serializer
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。
@@ -12,19 +9,12 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class SByteSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
+            serializerInputStream.Write(RpcSerializerUtil.Byte_SByte);
             var value = (sbyte)obj;
-            int intValue = 0;
-            if (value < 0)
-            {
-                intValue = (127 - (int)value);
-            }
-            else
-            {
-                intValue = value;
-            }
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_SByte, BitConverter.GetBytes(intValue));
+            int intValue = value < 0 ? (127 - value) : value;
+            serializerInputStream.Write(intValue);
         }
     }
 }

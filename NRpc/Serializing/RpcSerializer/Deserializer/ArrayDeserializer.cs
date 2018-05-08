@@ -17,7 +17,7 @@ namespace NRpc.Serializing.RpcSerializer.Deserializer
             var arrayBytesData = ByteUtil.DecodeBytes(inputBytes, startOffset, out nextStartOffset);
             if (arrayBytesData.Length > 0)
             {
-                var typeName = ByteUtil.DecodeString(arrayBytesData, 1, out int arrayDataStartOffset);
+                var typeName = ByteUtil.DecodeString(arrayBytesData, 0, out int arrayDataStartOffset);
                 int arrayDataFieldStartOffset = arrayDataStartOffset;
                 var arrayCount = ByteUtil.DecodeInt(arrayBytesData, arrayDataFieldStartOffset, out arrayDataStartOffset);
                 arrayDataFieldStartOffset = arrayDataStartOffset;

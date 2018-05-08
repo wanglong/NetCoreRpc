@@ -1,7 +1,5 @@
-﻿using NRpc.Utils;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace NRpc.Serializing.RpcSerializer.Serializer
 {
@@ -21,22 +19,24 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
             _type = type;
         }
 
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            var typeNameBytes = RpcSerializerUtil.EncodeString(_type.FullName);
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Enumerable);
+            var startLength = serializerInputStream.Length;
+            serializerInputStream.Write(0);//当前流长度占位
+            serializerInputStream.Write(_type.FullName);
             var count = 0;
             var enumerable = (IEnumerable)obj;
             var enumerator = enumerable.GetEnumerator();
-            List<byte[]> valueByteList = new List<byte[]>();
+            var currentLength = serializerInputStream.Length;
+            serializerInputStream.Write(0);//总个数占位
             while (enumerator.MoveNext())
             {
                 count++;
-                var valueBytes = SerializerFactory.Serializer(enumerator.Current);
-                valueByteList.Add(valueBytes);
+                SerializerFactory.Serializer(enumerator.Current, serializerInputStream);
             }
-            var totalfieldBytes = ByteUtil.Combine(valueByteList);
-            var objBytesLength = typeNameBytes.Length + totalfieldBytes.Length + 4;
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Enumerable, BitConverter.GetBytes(objBytesLength), typeNameBytes, BitConverter.GetBytes(count), totalfieldBytes);
+            serializerInputStream.UpdateCurrentLength(count, currentLength);//填补数量
+            serializerInputStream.UpdateCurrentLength(serializerInputStream.Length - startLength - 4, startLength);//填补流长度
         }
     }
 }

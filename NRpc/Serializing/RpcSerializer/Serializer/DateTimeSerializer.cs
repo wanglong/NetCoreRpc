@@ -12,9 +12,10 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class DateTimeSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_DateTime, ByteUtil.EncodeDateTime((DateTime)obj));
+            serializerInputStream.Write(RpcSerializerUtil.Byte_DateTime);
+            serializerInputStream.Write(ByteUtil.EncodeDateTime((DateTime)obj));
         }
     }
 }

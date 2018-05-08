@@ -14,9 +14,9 @@ namespace NRpc.Serializing.RpcSerializer.Deserializer
         public override object GetObject(byte[] inputBytes, int startOffset, out int nextStartOffset)
         {
             var intValue = ByteUtil.DecodeInt(inputBytes, startOffset, out nextStartOffset);
-            if (intValue >= 127)
+            if (intValue > 127)
             {
-                return 127 - intValue;
+                return (sbyte)(127 - intValue);
             }
             else
             {

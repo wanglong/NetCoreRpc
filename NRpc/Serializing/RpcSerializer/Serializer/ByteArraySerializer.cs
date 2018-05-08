@@ -1,5 +1,4 @@
-﻿using NRpc.Utils;
-using System;
+﻿using System;
 
 namespace NRpc.Serializing.RpcSerializer.Serializer
 {
@@ -12,11 +11,13 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class ByteArraySerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
+            serializerInputStream.Write(RpcSerializerUtil.Byte_ByteArray);
             var bytes = (byte[])obj;
             var length = bytes.Length;
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_ByteArray, BitConverter.GetBytes(length), bytes);
+            serializerInputStream.Write(BitConverter.GetBytes(length), 0, 4);
+            serializerInputStream.Write(bytes, 0, length);
         }
     }
 }

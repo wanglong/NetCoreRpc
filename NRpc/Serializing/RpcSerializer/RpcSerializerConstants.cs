@@ -13,104 +13,80 @@ namespace NRpc.Serializing.RpcSerializer
     /// 类功能描述：
     /// 创建标识：yjq 2018/1/26 10:11:41
     /// </summary>
-    public static partial class RpcSerializerUtil
+    internal static partial class RpcSerializerUtil
     {
         public static readonly byte[] SizeBytes = BitConverter.GetBytes(4);
 
-        public static readonly char Char_Byte = 'B';
-        public static readonly byte Byte_Byte = (byte)Char_Byte;
+        public static readonly byte Byte_Byte = 1;
         public static readonly byte[] Bytes_Byte = new byte[1] { Byte_Byte };
 
-        public static readonly char Char_SByte = 'b';
-        public static readonly byte Byte_SByte = (byte)Char_SByte;
+        public static readonly byte Byte_SByte = 2;
         public static readonly byte[] Bytes_SByte = new byte[1] { Byte_SByte };
 
-        public static readonly char Char_Int = 'I';
-        public static readonly byte Byte_Int = (byte)Char_Int;
+        public static readonly byte Byte_Int = 3;
         public static readonly byte[] Bytes_Int = new byte[1] { Byte_Int };
 
-        public static readonly char Char_UInt = 'i';
-        public static readonly byte Byte_UInt = (byte)Char_UInt;
+        public static readonly byte Byte_UInt = 4;
         public static readonly byte[] Bytes_UInt = new byte[1] { Byte_UInt };
 
-        public static readonly char Char_Short = 'S';
-        public static readonly byte Byte_Short = (byte)Char_Short;
+        public static readonly byte Byte_Short = 5;
         public static readonly byte[] Bytes_Short = new byte[1] { Byte_Short };
 
-        public static readonly char Char_UShort = 's';
-        public static readonly byte Byte_UShort = (byte)Char_UShort;
+        public static readonly byte Byte_UShort = 6;
         public static readonly byte[] Bytes_UShort = new byte[1] { Byte_UShort };
 
-        public static readonly char Char_Long = 'L';
-        public static readonly byte Byte_Long = (byte)Char_Long;
+        public static readonly byte Byte_Long = 7;
         public static readonly byte[] Bytes_Long = new byte[1] { Byte_Long };
 
-        public static readonly char Char_ULong = 'l';
-        public static readonly byte Byte_ULong = (byte)Char_ULong;
+        public static readonly byte Byte_ULong = 8;
         public static readonly byte[] Bytes_ULong = new byte[1] { Byte_ULong };
 
-        public static readonly char Char_Decimal = 'M';
-        public static readonly byte Byte_Decimal = (byte)Char_Decimal;
+        public static readonly byte Byte_Decimal = 9;
         public static readonly byte[] Bytes_Decimal = new byte[1] { Byte_Decimal };
 
-        public static readonly char Char_Float = 'F';
-        public static readonly byte Byte_Float = (byte)Char_Float;
+        public static readonly byte Byte_Float = 10;
         public static readonly byte[] Bytes_Float = new byte[1] { Byte_Float };
 
-        public static readonly char Char_Double = 'D';
-        public static readonly byte Byte_Double = (byte)Char_Double;
+        public static readonly byte Byte_Double = 11;
         public static readonly byte[] Bytes_Double = new byte[1] { Byte_Double };
 
-        public static readonly char Char_Bool = 'A';
-        public static readonly byte Byte_Bool = (byte)Char_Bool;
+        public static readonly byte Byte_Bool = 12;
         public static readonly byte[] Bytes_Bool = new byte[1] { Byte_Bool };
 
-        public static readonly char Char_Char = 'C';
-        public static readonly byte Byte_Char = (byte)Char_Char;
+        public static readonly byte Byte_Char = 13;
         public static readonly byte[] Bytes_Char = new byte[1] { Byte_Char };
 
-        public static readonly char String_String = 'T';
-        public static readonly byte Byte_String = (byte)String_String;
+        public static readonly byte Byte_String = 14;
         public static readonly byte[] Bytes_String = new byte[1] { Byte_String };
 
-        public static readonly char Char_Object = 'O';
-        public static readonly byte Byte_Object = (byte)Char_Object;
+        public static readonly byte Byte_Object = 15;
         public static readonly byte[] Bytes_Object = new byte[1] { Byte_Object };
 
-        public static readonly char Char_DateTime = 'E';
-        public static readonly byte Byte_DateTime = (byte)Char_DateTime;
+        public static readonly byte Byte_DateTime = 16;
         public static readonly byte[] Bytes_DateTime = new byte[1] { Byte_DateTime };
 
-        public static readonly char Char_TimeSpan = 'e';
-        public static readonly byte Byte_TimeSpan = (byte)Char_TimeSpan;
+        public static readonly byte Byte_TimeSpan = 17;
         public static readonly byte[] Bytes_TimeSpan = new byte[1] { Byte_TimeSpan };
 
-        public static readonly char Char_ByteArray = 'J';
-        public static readonly byte Byte_ByteArray = (byte)Char_ByteArray;
+        public static readonly byte Byte_ByteArray = 18;
         public static readonly byte[] Bytes_ByteArray = new byte[1] { Byte_ByteArray };
 
-        public static readonly char Char_Enum = 'U';
-        public static readonly byte Byte_Enum = (byte)Char_Enum;
+        public static readonly byte Byte_Enum = 19;
         public static readonly byte[] Bytes_Enum = new byte[1] { Byte_Enum };
 
-        public static readonly char Char_Array = 'Y';
-        public static readonly byte Byte_Array = (byte)Char_Array;
+        public static readonly byte Byte_Array = 20;
         public static readonly byte[] Bytes_Array = new byte[1] { Byte_Array };
 
-        public static readonly char Char_Dictionary = 'y';
-        public static readonly byte Byte_Dictionary = (byte)Char_Dictionary;
+        public static readonly byte Byte_Dictionary = 21;
         public static readonly byte[] Bytes_Dictionary = new byte[1] { Byte_Dictionary };
 
-        public static readonly char Char_Enumerable = 'X';
-        public static readonly byte Byte_Enumerable = (byte)Char_Enumerable;
+        public static readonly byte Byte_Enumerable = 22;
         public static readonly byte[] Bytes_Enumerable = new byte[1] { Byte_Enumerable };
 
-        public static readonly char Char_DataTable = 'x';
-        public static readonly byte Byte_DataTable = (byte)Char_DataTable;
+        public static readonly byte Byte_DataTable = 23;
         public static readonly byte[] Bytes_DataTable = new byte[1] { Byte_DataTable };
 
-        public static readonly char Char_DataSet = 'Z';
-        public static readonly byte Byte_DataSet = (byte)Char_DataSet;
+        public static readonly byte Byte_DataSet = 24;
         public static readonly byte[] Bytes_DataSet = new byte[1] { Byte_DataSet };
 
         public static readonly Dictionary<RuntimeTypeHandle, BaseSerializer> SerializerMap = new Dictionary<RuntimeTypeHandle, BaseSerializer>()

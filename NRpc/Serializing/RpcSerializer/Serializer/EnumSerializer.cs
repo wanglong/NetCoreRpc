@@ -1,5 +1,4 @@
-﻿using NRpc.Utils;
-using System;
+﻿using System;
 
 namespace NRpc.Serializing.RpcSerializer.Serializer
 {
@@ -19,11 +18,11 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
             _type = type;
         }
 
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            var typeNameBytes = RpcSerializerUtil.EncodeString(_type.FullName);
-            var enumValue = ((Enum)obj).ToString();
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Enum, typeNameBytes, RpcSerializerUtil.EncodeString(enumValue));
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Enum);
+            serializerInputStream.Write(_type.FullName);
+            serializerInputStream.Write(Convert.ToInt32(((Enum)obj).ToString("d")));
         }
     }
 }

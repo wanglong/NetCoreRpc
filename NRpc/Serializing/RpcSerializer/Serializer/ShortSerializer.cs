@@ -1,5 +1,4 @@
-﻿using NRpc.Utils;
-using System;
+﻿using System;
 
 namespace NRpc.Serializing.RpcSerializer.Serializer
 {
@@ -12,9 +11,10 @@ namespace NRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class ShortSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Short, BitConverter.GetBytes((short)obj));
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Short);
+            serializerInputStream.Write(BitConverter.GetBytes((short)obj));
         }
     }
 }

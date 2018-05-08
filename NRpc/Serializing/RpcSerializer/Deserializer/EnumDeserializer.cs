@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NRpc.Utils;
+using System;
 
 namespace NRpc.Serializing.RpcSerializer.Deserializer
 {
@@ -13,11 +14,11 @@ namespace NRpc.Serializing.RpcSerializer.Deserializer
     {
         public override object GetObject(byte[] inputBytes, int startOffset, out int nextStartOffset)
         {
-            var enumTypeName = RpcSerializerUtil.DecodeString(inputBytes, startOffset, out nextStartOffset);
+            var enumTypeName = ByteUtil.DecodeString(inputBytes, startOffset, out nextStartOffset);
             startOffset = nextStartOffset;
-            var enumValue = RpcSerializerUtil.DecodeString(inputBytes, startOffset, out nextStartOffset);
+            var enumValue = ByteUtil.DecodeInt(inputBytes, startOffset, out nextStartOffset);
             var type = RpcSerializerUtil.GetType(enumTypeName);
-            return Enum.Parse(type, enumValue, false);
+            return Enum.ToObject(type, enumValue);
         }
     }
 }
