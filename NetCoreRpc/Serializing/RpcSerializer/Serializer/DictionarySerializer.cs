@@ -1,7 +1,5 @@
-﻿using NetCoreRpc.Utils;
-using System;
+﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
@@ -21,32 +19,21 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
             _type = type;
         }
 
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            var typeNameBytes = RpcSerializerUtil.EncodeString(_type.FullName);
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Dictionary);
+            var startLength = serializerInputStream.Length;
+            serializerInputStream.Write(0);//当前流长度占位
             var dic = (IDictionary)obj;
-            var count = dic.Count;
-            var countBytes = BitConverter.GetBytes(count);
-            if (count > 0)
+            serializerInputStream.Write(_type.FullName);
+            serializerInputStream.Write(dic.Count);
+            var enumerator = dic.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                List<byte[]> valueByteList = new List<byte[]>();
-                var enumerator = dic.GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    var keyBytes = SerializerFactory.Serializer(enumerator.Key);
-                    var valueBytes = SerializerFactory.Serializer(enumerator.Value);
-                    valueByteList.Add(keyBytes);
-                    valueByteList.Add(valueBytes);
-                }
-                var totalfieldBytes = ByteUtil.Combine(valueByteList);
-                var objBytesLength = typeNameBytes.Length + totalfieldBytes.Length + 4;
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Dictionary, BitConverter.GetBytes(objBytesLength), typeNameBytes, countBytes, totalfieldBytes);
+                SerializerFactory.Serializer(enumerator.Key, serializerInputStream);
+                SerializerFactory.Serializer(enumerator.Value, serializerInputStream);
             }
-            else
-            {
-                var objBytesLength = typeNameBytes.Length + 4;
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Dictionary, BitConverter.GetBytes(objBytesLength), typeNameBytes, countBytes);
-            }
+            serializerInputStream.UpdateCurrentLength(serializerInputStream.Length - startLength - 4, startLength);//填补流长度
         }
     }
 }

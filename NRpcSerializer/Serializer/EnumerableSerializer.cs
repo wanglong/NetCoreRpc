@@ -34,7 +34,7 @@ namespace NRpcSerializer.Serializer
                 SerializerFactory.Serializer(enumerator.Current, serializerInputStream);
             }
             serializerInputStream.UpdateCurrentLength(count, currentLength);//填补数量
-            serializerInputStream.UpdateCurrentLength(serializerInputStream.Length - startLength-4, startLength);//填补流长度
+            serializerInputStream.UpdateCurrentLength(serializerInputStream.Length - startLength - 4, startLength);//填补流长度
         }
     }
 }

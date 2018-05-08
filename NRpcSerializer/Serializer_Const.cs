@@ -87,7 +87,6 @@ namespace NRpcSerializer
         public static readonly byte Byte_DataSet = 24;
         public static readonly byte[] Bytes_DataSet = new byte[1] { Byte_DataSet };
 
-
         public static readonly Dictionary<RuntimeTypeHandle, BaseSerializer> SerializerMap = new Dictionary<RuntimeTypeHandle, BaseSerializer>()
         {
             [typeof(string).TypeHandle] = new StringSerializer(),

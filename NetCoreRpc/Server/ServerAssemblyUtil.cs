@@ -33,6 +33,7 @@ namespace NetCoreRpc.Server
             }
             return null;
         }
+
         public static void AddAssemblyList(params string[] assemblyNameList)
         {
             if (assemblyNameList != null)

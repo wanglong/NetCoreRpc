@@ -1,13 +1,12 @@
-﻿using NetCoreRpc.Serializing;
+﻿using NetCoreRpc.Extensions;
+using NetCoreRpc.Serializing;
 using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Utils;
-using NetCoreRpc;
+using NRpc;
 using System;
+using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading.Tasks;
-using NRpc;
-using System.Collections.Concurrent;
-using NetCoreRpc.Extensions;
 
 namespace NetCoreRpc.Server
 {
@@ -138,6 +137,7 @@ namespace NetCoreRpc.Server
         {
             return DependencyManage.Resolve<IResponseSerailizer>().Serialize(obj, methodInfo);
         }
+
         private static readonly ConcurrentDictionary<RuntimeMethodHandle, IServerFilter> _FilterDic = new ConcurrentDictionary<RuntimeMethodHandle, IServerFilter>();
 
         private IServerFilter GetFilter(MethodInfo methodInfo)

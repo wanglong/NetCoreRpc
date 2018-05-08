@@ -1,4 +1,4 @@
-﻿using NetCoreRpc.Utils;
+﻿using System;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
@@ -11,10 +11,10 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class StringSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            ByteUtil.EncodeString((string)obj, out byte[] lengthBytes, out byte[] dataBytes);
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_String, lengthBytes, dataBytes);
+            serializerInputStream.Write(RpcSerializerUtil.Byte_String);
+            serializerInputStream.Write((String)obj);
         }
     }
 }

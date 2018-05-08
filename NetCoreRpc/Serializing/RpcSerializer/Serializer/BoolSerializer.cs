@@ -1,6 +1,4 @@
-﻿using NetCoreRpc.Utils;
-
-namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
+﻿namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。
@@ -11,15 +9,16 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class BoolSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Bool);
             if ((bool)obj)
             {
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Bool, new byte[1] { 1 });
+                serializerInputStream.Write((byte)1);
             }
             else
             {
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Bool, new byte[1] { 0 });
+                serializerInputStream.Write((byte)0);
             }
         }
     }

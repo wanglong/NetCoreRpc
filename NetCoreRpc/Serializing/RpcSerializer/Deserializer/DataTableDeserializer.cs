@@ -17,7 +17,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Deserializer
             var objectByteData = ByteUtil.DecodeBytes(inputBytes, startOffset, out nextStartOffset);
             if (objectByteData.Length > 0)
             {
-                var tableName = RpcSerializerUtil.DecodeString(objectByteData, 0, out int tableNextStartOffset);
+                var tableName = ByteUtil.DecodeString(objectByteData, 0, out int tableNextStartOffset);
                 var tabeOffsetIndex = tableNextStartOffset;
                 var table = new DataTable(tableName);
                 var columnCount = ByteUtil.DecodeInt(objectByteData, tabeOffsetIndex, out tableNextStartOffset);

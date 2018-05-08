@@ -1,7 +1,4 @@
-﻿using NetCoreRpc.Utils;
-using System;
-using System.Data;
-using System.IO;
+﻿using System.Data;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
@@ -14,22 +11,18 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class DataSetSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
+            serializerInputStream.Write(RpcSerializerUtil.Byte_DataSet);
+            var startLength = serializerInputStream.Length;
+            serializerInputStream.Write(0);//当前流长度占位
             var dataSet = (DataSet)obj;
-            using (MemoryStream stream = new MemoryStream())
+            serializerInputStream.Write(dataSet.Tables.Count);
+            for (int i = 0; i < dataSet.Tables.Count; i++)
             {
-                var count = dataSet.Tables.Count;
-                var countBytes = BitConverter.GetBytes(count);
-                stream.Write(countBytes, 0, countBytes.Length);
-                for (int i = 0; i < count; i++)
-                {
-                    var tableBytes = SerializerFactory.Serializer(dataSet.Tables[i]);
-                    stream.Write(tableBytes, 0, tableBytes.Length);
-                }
-                var dataSetBytes = stream.ToArray();
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_DataSet, BitConverter.GetBytes(dataSetBytes.Length), dataSetBytes);
+                SerializerFactory.Serializer(dataSet.Tables[i], serializerInputStream);
             }
+            serializerInputStream.UpdateCurrentLength(serializerInputStream.Length - startLength - 4, startLength);//填补流长度
         }
     }
 }

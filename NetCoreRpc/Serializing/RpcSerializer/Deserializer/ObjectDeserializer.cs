@@ -19,7 +19,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Deserializer
             var objectByteData = ByteUtil.DecodeBytes(inputBytes, startOffset, out nextStartOffset);
             if (objectByteData.Length > 0)
             {
-                var typeName = ByteUtil.DecodeString(objectByteData, 1, out int objDataStartOffset);
+                var typeName = ByteUtil.DecodeString(objectByteData, 0, out int objDataStartOffset);
                 var type = RpcSerializerUtil.GetType(typeName);
                 var result = RpcSerializerUtil.CreateInstance(type);
                 int objDataFieldStartOffset = objDataStartOffset;
@@ -36,7 +36,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Deserializer
         {
             if (startOffset < totalLength)
             {
-                var fieldName = ByteUtil.DecodeString(data, startOffset + 1, out nextStartOffset);
+                var fieldName = ByteUtil.DecodeString(data, startOffset, out nextStartOffset);
                 startOffset = nextStartOffset;
                 var fieldValue = SerializerFactory.Deserializer(data, startOffset, out nextStartOffset);
                 var fieldInfo = fieldList.FirstOrDefault(m => m.Name == fieldName);

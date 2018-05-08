@@ -16,7 +16,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Deserializer
             var intValue = ByteUtil.DecodeInt(inputBytes, startOffset, out nextStartOffset);
             if (intValue > 127)
             {
-                return 127 - intValue;
+                return (sbyte)(127 - intValue);
             }
             else
             {

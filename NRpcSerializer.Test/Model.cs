@@ -71,6 +71,7 @@ namespace NRpcSerializer.Test
 
         public DataTable P8 { get; set; } = new DataTable();
         public DataSet P9 { get; set; } = new DataSet();
+
         public override string ToString()
         {
             if (P4 != null)

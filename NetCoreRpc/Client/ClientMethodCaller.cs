@@ -1,12 +1,11 @@
 ﻿using NetCoreRpc.Serializing;
 using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Utils;
-using NetCoreRpc;
+using NRpc;
 using System;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using NRpc;
 
 namespace NetCoreRpc.Client
 {

@@ -1,7 +1,4 @@
-﻿using NetCoreRpc.Utils;
-using System;
-
-namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
+﻿namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。
@@ -12,9 +9,10 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class IntSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_Int, BitConverter.GetBytes((int)obj));
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Int);
+            serializerInputStream.Write((int)obj);
         }
     }
 }

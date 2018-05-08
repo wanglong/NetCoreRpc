@@ -1,6 +1,4 @@
-﻿using NetCoreRpc.Utils;
-using System;
-using System.IO;
+﻿using System;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
@@ -20,22 +18,19 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
             _type = type;
         }
 
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
+            serializerInputStream.Write(RpcSerializerUtil.Byte_Array);
+            var startLength = serializerInputStream.Length;
+            serializerInputStream.Write(0);//当前流长度占位
+            serializerInputStream.Write(_type.GetElementType().FullName);
             var array = (Array)obj;
-            using (MemoryStream stream = new MemoryStream())
+            serializerInputStream.Write(array.Length);
+            foreach (var item in array)
             {
-                stream.WriteString(_type.GetElementType().FullName);
-                stream.Write(BitConverter.GetBytes(array.Length), 0, 4);
-                foreach (var item in array)
-                {
-                    var bytes = SerializerFactory.Serializer(item);
-                    stream.Write(bytes, 0, bytes.Length);
-                }
-                var arrayBytes = stream.ToArray();
-                var objLengthBytes = BitConverter.GetBytes(arrayBytes.Length);
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_Array, objLengthBytes, arrayBytes);
+                SerializerFactory.Serializer(item, serializerInputStream);
             }
+            serializerInputStream.UpdateCurrentLength(serializerInputStream.Length - startLength - 4, startLength);//填补流长度
         }
     }
 }

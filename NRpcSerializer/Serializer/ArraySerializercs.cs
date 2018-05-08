@@ -18,7 +18,7 @@ namespace NRpcSerializer.Serializer
 
         public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            serializerInputStream.Write(SerializerUtil.Bytes_Array);
+            serializerInputStream.Write(SerializerUtil.Byte_Array);
             var startLength = serializerInputStream.Length;
             serializerInputStream.Write(0);//当前流长度占位
             serializerInputStream.Write(_type.GetElementType().FullName);

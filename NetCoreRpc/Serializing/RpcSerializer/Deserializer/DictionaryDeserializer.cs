@@ -19,7 +19,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Deserializer
             var dicBytesData = ByteUtil.DecodeBytes(inputBytes, startOffset, out nextStartOffset);
             if (dicBytesData.Length > 0)
             {
-                var dicTypeName = RpcSerializerUtil.DecodeString(dicBytesData, 0, out int arrayDataStartOffset);
+                var dicTypeName = ByteUtil.DecodeString(dicBytesData, 0, out int arrayDataStartOffset);
                 int arrayDataFieldStartOffset = arrayDataStartOffset;
                 var count = ByteUtil.DecodeInt(dicBytesData, arrayDataFieldStartOffset, out arrayDataStartOffset);
                 var dic = CreateDic(dicTypeName, count);

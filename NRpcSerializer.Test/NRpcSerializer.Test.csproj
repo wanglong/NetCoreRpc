@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NetCoreRpc\NetCoreRpc.csproj" />
-    <ProjectReference Include="..\NRpcSerializer\NRpcSerializer.csproj" />
   </ItemGroup>
 
 </Project>

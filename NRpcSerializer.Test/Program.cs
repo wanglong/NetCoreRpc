@@ -1,4 +1,5 @@
 ﻿using NetCoreRpc.Serializing;
+using NetCoreRpc.Serializing.RpcSerializer;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,25 +8,24 @@ using System.Text;
 
 namespace NRpcSerializer.Test
 {
-    class Program
+    internal class Program
     {
         private delegate object CreateDelegate();
-        static void Main(string[] args)
+
+        private static void Main(string[] args)
         {
             CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
             CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
             CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
             CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
-            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
-            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
-            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
-            CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
-            CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            //CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
+            //CodeTimer.Time("Serializer", 100000, new CodeTestClass().Action);
+            //CodeTimer.Time("json", 100000, new JsonCodeTestClass().Action);
             Console.ReadLine();
         }
     }
-
-
 
     public class StreamTestClass : IAction
     {
@@ -99,8 +99,8 @@ namespace NRpcSerializer.Test
                     P7 = ObjectId.GenerateNewId()
                 }
             };
-            var bytes =  SerializerFactory.Serializer(test);
-            var obj =  SerializerFactory.Deserializer(bytes);
+            var bytes = SerializerFactory.Serializer(test);
+            var obj = SerializerFactory.Deserializer(bytes);
         }
     }
 

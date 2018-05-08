@@ -1,5 +1,4 @@
-﻿using NetCoreRpc.Utils;
-using System;
+﻿using System;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
@@ -12,9 +11,10 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class ULongSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
-            return ByteUtil.Combine(RpcSerializerUtil.Bytes_ULong, BitConverter.GetBytes((ulong)obj));
+            serializerInputStream.Write(RpcSerializerUtil.Byte_ULong);
+            serializerInputStream.Write(BitConverter.GetBytes((ulong)obj));
         }
     }
 }

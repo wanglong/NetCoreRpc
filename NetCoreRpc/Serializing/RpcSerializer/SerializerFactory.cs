@@ -1,6 +1,7 @@
 ﻿using NetCoreRpc.Serializing.RpcSerializer.Deserializer;
 using NetCoreRpc.Serializing.RpcSerializer.Serializer;
 using NetCoreRpc.Utils;
+using System.Linq;
 
 namespace NetCoreRpc.Serializing.RpcSerializer
 {
@@ -13,11 +14,11 @@ namespace NetCoreRpc.Serializing.RpcSerializer
     /// </summary>
     public sealed class SerializerFactory
     {
-        public static byte[] Serializer(object obj)
+        internal static void Serializer(object obj, SerializerInputStream serializerInputStream)
         {
             if (obj == null)
             {
-                return new ObjectSerializer(null).GeteObjectBytes(obj);
+                new ObjectSerializer(null).WriteBytes(obj, serializerInputStream);
             }
             else
             {
@@ -29,29 +30,40 @@ namespace NetCoreRpc.Serializing.RpcSerializer
                 var typeHandle = type.TypeHandle;
                 if (RpcSerializerUtil.SerializerMap.ContainsKey(typeHandle))
                 {
-                    return RpcSerializerUtil.SerializerMap[typeHandle].GeteObjectBytes(obj);
+                    RpcSerializerUtil.SerializerMap[typeHandle].WriteBytes(obj, serializerInputStream);
                 }
                 else
                 {
                     if (type.IsEnum)
                     {
-                        return new EnumSerializer(type).GeteObjectBytes(obj);
+                        new EnumSerializer(type).WriteBytes(obj, serializerInputStream);
                     }
                     else if (type.IsArray)
                     {
-                        return new ArraySerializercs(type).GeteObjectBytes(obj);
+                        new ArraySerializercs(type).WriteBytes(obj, serializerInputStream);
                     }
                     else if (TypeUtil.IDictionaryType.IsAssignableFrom(type))
                     {
-                        return new DictionarySerializer(type).GeteObjectBytes(obj);
+                        new DictionarySerializer(type).WriteBytes(obj, serializerInputStream);
                     }
-                    else if (TypeUtil.IEnumerableType.IsAssignableFrom(type))
+                    else if (TypeUtil.IEnumerableType.IsAssignableFrom(type) || type.DeclaringType == typeof(Enumerable))
                     {
-                        return new EnumerableSerializer(type).GeteObjectBytes(obj);
+                        new EnumerableSerializer(type).WriteBytes(obj, serializerInputStream);
                     }
-
-                    return new ObjectSerializer(type).GeteObjectBytes(obj);
+                    else
+                    {
+                        new ObjectSerializer(type).WriteBytes(obj, serializerInputStream);
+                    }
                 }
+            }
+        }
+
+        public static byte[] Serializer(object obj)
+        {
+            using (SerializerInputStream serializerInputStream = new SerializerInputStream())
+            {
+                Serializer(obj, serializerInputStream);
+                return serializerInputStream.ToBytes();
             }
         }
 

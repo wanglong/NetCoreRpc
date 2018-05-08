@@ -1,7 +1,4 @@
-﻿using NetCoreRpc.Utils;
-using System;
-using System.Data;
-using System.IO;
+﻿using System.Data;
 
 namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
 {
@@ -14,38 +11,28 @@ namespace NetCoreRpc.Serializing.RpcSerializer.Serializer
     /// </summary>
     public sealed class DataTableSerializer : BaseSerializer
     {
-        public override byte[] GeteObjectBytes(object obj)
+        public override void WriteBytes(object obj, SerializerInputStream serializerInputStream)
         {
+            serializerInputStream.Write(RpcSerializerUtil.Byte_DataTable);
+            var startLength = serializerInputStream.Length;
+            serializerInputStream.Write(0);//当前流长度占位
             var data = (DataTable)obj;
-            using (MemoryStream stream = new MemoryStream())
+            serializerInputStream.Write(data.TableName);
+            serializerInputStream.Write(data.Columns.Count);
+            for (int i = 0; i < data.Columns.Count; i++)
             {
-                var tableName = data.TableName;
-                var tableNameBytes = RpcSerializerUtil.EncodeString(tableName);
-                stream.Write(tableNameBytes, 0, tableNameBytes.Length);
-                var columnCount = data.Columns.Count;
-                stream.Write(BitConverter.GetBytes(columnCount), 0, 4);
-                for (int i = 0; i < columnCount; i++)
-                {
-                    var columnName = data.Columns[i].ColumnName;
-                    var columnType = data.Columns[i].DataType;
-                    ByteUtil.EncodeString(columnName, out byte[] lengthBytes, out byte[] dataBytes);
-                    stream.Write(lengthBytes, 0, lengthBytes.Length);
-                    ByteUtil.EncodeString(columnType.FullName, out lengthBytes, out dataBytes);
-                    stream.Write(lengthBytes, 0, lengthBytes.Length);
-                }
-                var rowCount = data.Rows.Count;
-                stream.Write(BitConverter.GetBytes(rowCount), 0, 4);
-                for (int i = 0; i < rowCount; i++)
-                {
-                    for (int j = 0; j < columnCount; j++)
-                    {
-                        var objBytes = SerializerFactory.Serializer(data.Rows[i][j]);
-                        stream.Write(objBytes, 0, objBytes.Length);
-                    }
-                }
-                var tableBytes = stream.ToArray();
-                return ByteUtil.Combine(RpcSerializerUtil.Bytes_DataTable, BitConverter.GetBytes(tableBytes.Length), tableBytes);
+                serializerInputStream.Write(data.Columns[i].ColumnName);
+                serializerInputStream.Write(data.Columns[i].DataType.FullName);
             }
+            serializerInputStream.Write(data.Rows.Count);
+            for (int i = 0; i < data.Rows.Count; i++)
+            {
+                for (int j = 0; j < data.Columns.Count; j++)
+                {
+                    SerializerFactory.Serializer(data.Rows[i][j], serializerInputStream);
+                }
+            }
+            serializerInputStream.UpdateCurrentLength(serializerInputStream.Length - startLength - 4, startLength);//填补流长度
         }
     }
 }

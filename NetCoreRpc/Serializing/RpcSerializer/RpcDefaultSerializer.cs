@@ -40,7 +40,7 @@ namespace NetCoreRpc.Serializing.RpcSerializer
         public byte[] Serialize(object obj)
         {
             var data = SerializerFactory.Serializer(obj);
-            if (data.Length > 1024 * 5)
+            if (data.Length > 1024 * 5 * 1024)
             {
                 return ByteUtil.Combine(CompressedBytes, CompressionUtil.Compress(data));
             }
