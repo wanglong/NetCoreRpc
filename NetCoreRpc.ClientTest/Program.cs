@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetCoreRpc.Application;
 using NetCoreRpc.Client;
+using NetCoreRpc.Client.ConfigManage;
 using NLog.Extensions.Logging;
 using System;
 using System.IO;
@@ -51,7 +52,7 @@ namespace NetCoreRpc.ClientTest
         {
             IServiceCollection services = new ServiceCollection();
             services.AddOptions();
-            services.Configure<RemoteEndPointConfig>(Configuration.GetSection("NetCoreRpc"));
+            services.Configure<RpcConfig>(Configuration.GetSection("NetCoreRpc"));
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.UseRpc();//.UseZK();

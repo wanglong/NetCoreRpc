@@ -1,4 +1,5 @@
-﻿using NRpc.Serializing;
+﻿using NRpc.ConfigManage;
+using NRpc.Serializing;
 using NRpc.Transport.Remoting;
 using NRpc.Utils;
 using System;
@@ -25,12 +26,14 @@ namespace NRpc.Client
         private readonly IMethodCallSerializer _methodCallSerializer;
         private readonly IResponseSerailizer _responseSerailizer;
         private readonly Type _proxyType;
+        private readonly IConfigProvider _configProvider;
 
         public ClientMethodCaller(Type proxyType)
         {
             _proxyType = proxyType;
             _methodCallSerializer = DependencyManage.Resolve<IMethodCallSerializer>();
             _responseSerailizer = DependencyManage.Resolve<IResponseSerailizer>();
+            _configProvider = DependencyManage.Resolve<IConfigProvider>();
         }
 
         /// <summary>
@@ -42,12 +45,12 @@ namespace NRpc.Client
         /// <returns></returns>
         public object DoMethodCall(object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)
         {
-            LogUtil.InfoFormat("Start Request rpc Method：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
-            var client = RemotingClientFactory.GetClient(_proxyType);
             var requestInfo = Create(arrMethodArgs, argmentTypes, methodInfo);
-            var response = client.InvokeSync(requestInfo, NRpcConfig.GetRequestTimeouMillis());
+            LogUtil.DebugFormat("RequestID {0} Start Request rpc Method：{1} {2}", requestInfo.Id, methodInfo.DeclaringType.FullName, methodInfo.Name);
+            var client = RemotingClientFactory.GetClient(_proxyType);
+            var response = client.InvokeSync(requestInfo, _configProvider.GetConfig().RequestTimeouMillis);
             var result = HandleResponse(response, methodInfo);
-            LogUtil.InfoFormat("rpc Method CallBack：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
+            LogUtil.DebugFormat("RequestID {0} rpc Method CallBack：{1} {2}", requestInfo.Id, methodInfo.DeclaringType.FullName, methodInfo.Name);
             return result;
         }
 

@@ -1,4 +1,5 @@
-﻿using NetCoreRpc.Utils;
+﻿using NetCoreRpc.Client.ConfigManage;
+using NetCoreRpc.Utils;
 
 namespace NetCoreRpc.ServerRoute.ZK
 {
@@ -11,10 +12,18 @@ namespace NetCoreRpc.ServerRoute.ZK
     /// </summary>
     public sealed class ZkCoordinatorFactory : ICoordinatorFactory
     {
+        private readonly IRemoteEndPointConfigProvider _remoteEndPointConfigProvider;
+
+        public ZkCoordinatorFactory(IRemoteEndPointConfigProvider remoteEndPointConfigProvider)
+        {
+            _remoteEndPointConfigProvider = remoteEndPointConfigProvider;
+        }
+
         public IRouteCoordinator Create()
         {
-            var connectionStr = ConfigurationManage.GetValue("NetCoreRpc:Zookeeper:Connection");
-            var parentName = ConfigurationManage.GetValue("NetCoreRpc:Zookeeper:ParentName");
+            var config = _remoteEndPointConfigProvider.GetConfig();
+            var connectionStr = config?.Zookeeper?.Connection;
+            var parentName = config?.Zookeeper?.ParentName; 
             Ensure.NotNullAndNotEmpty(connectionStr, "NetCoreRpc:Zookeeper:Connection");
             Ensure.NotNullAndNotEmpty(parentName, "NetCoreRpc:Zookeeper:ParentName");
             var option = new RouteCoordinatorOption

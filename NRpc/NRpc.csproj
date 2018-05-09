@@ -63,8 +63,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\CilentManage\ClientPool.cs" />
     <Compile Include="Client\ClientMethodCaller.cs" />
     <Compile Include="Client\ProxyFactory.cs" />
+    <Compile Include="ConfigManage\ConfigProviderRegisterExtension.cs" />
+    <Compile Include="ConfigManage\DefalutConfigProvider.cs" />
+    <Compile Include="ConfigManage\IConfigProvider.cs" />
+    <Compile Include="LockManage\ILock.cs" />
+    <Compile Include="LockManage\LocalLock.cs" />
+    <Compile Include="LockManage\LockRegisterExtension.cs" />
     <Compile Include="NRpcConfig.cs" />
     <Compile Include="Client\RemotingClientFactory.cs" />
     <Compile Include="Client\RpcProxyImpl.cs" />

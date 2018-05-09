@@ -1,4 +1,5 @@
-﻿using NetCoreRpc.Serializing;
+﻿using NetCoreRpc.Client.ConfigManage;
+using NetCoreRpc.Serializing;
 using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Utils;
 using NRpc;
@@ -26,12 +27,14 @@ namespace NetCoreRpc.Client
         private readonly IMethodCallSerializer _methodCallSerializer;
         private readonly IResponseSerailizer _responseSerailizer;
         private readonly Type _proxyType;
+        private readonly IRemoteEndPointConfigProvider _remoteEndPointConfigProvider;
 
         public ClientMethodCaller(Type proxyType)
         {
             _proxyType = proxyType;
             _methodCallSerializer = DependencyManage.Resolve<IMethodCallSerializer>();
             _responseSerailizer = DependencyManage.Resolve<IResponseSerailizer>();
+            _remoteEndPointConfigProvider = DependencyManage.Resolve<IRemoteEndPointConfigProvider>();
         }
 
         /// <summary>
@@ -43,12 +46,12 @@ namespace NetCoreRpc.Client
         /// <returns></returns>
         public object DoMethodCall(object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)
         {
-            LogUtil.InfoFormat("Start Request rpc Method：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
-            var client = RemotingClientFactory.GetClient(_proxyType);
             var requestInfo = Create(arrMethodArgs, argmentTypes, methodInfo);
-            var response = client.InvokeSync(requestInfo, RemoteEndPointConfig.GetRequestTimeouMillis());
+            LogUtil.DebugFormat("RequestID {0} Start Request rpc Method：{1} {2}", requestInfo.Id, methodInfo.DeclaringType.FullName, methodInfo.Name);
+            var client = RemotingClientFactory.GetClient(_proxyType);
+            var response = client.InvokeSync(requestInfo, _remoteEndPointConfigProvider.GetConfig().RequestTimeouMillis);
             var result = HandleResponse(response, methodInfo);
-            LogUtil.InfoFormat("rpc Method CallBack：{0},{1}", methodInfo.DeclaringType.FullName, methodInfo.Name);
+            LogUtil.DebugFormat("RequestID {0} rpc Method CallBack：{1} {2}", requestInfo.Id, methodInfo.DeclaringType.FullName, methodInfo.Name);
             return result;
         }
 

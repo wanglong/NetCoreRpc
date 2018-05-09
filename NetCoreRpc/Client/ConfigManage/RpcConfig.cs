@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
-namespace NetCoreRpc.Client
+namespace NetCoreRpc.Client.ConfigManage
 {
     /// <summary>
     /// Copyright (C) 2018 备胎 版权所有。
@@ -12,11 +12,11 @@ namespace NetCoreRpc.Client
     /// 类功能描述：服务端地址配置
     /// 创建标识：yjq 2018/1/19 14:33:42
     /// </summary>
-    public class RemoteEndPointConfig
+    public class RpcConfig
     {
         private static IRouteCoordinator _RouteCoordinator;
 
-        static RemoteEndPointConfig()
+        static RpcConfig()
         {
             _RouteCoordinator = DependencyManage.Resolve<ICoordinatorFactory>().Create();
         }
@@ -28,7 +28,11 @@ namespace NetCoreRpc.Client
 
         public string Default { get; set; }
 
+        public int MaxClientPoolCount { get; set; } = 200;
+
         public List<RemoteEndPointConfigGroupInfo> Group { get; set; }
+
+        public ZkConfig Zookeeper { get; set; }
 
         public IPEndPoint GetEndPoint(string typeName)
         {
@@ -58,21 +62,6 @@ namespace NetCoreRpc.Client
             }
             throw new System.Exception("服务端地址配置错误");
         }
-
-        public static IPEndPoint GetServerEndPoint(string typeName)
-        {
-            var endPoint = ConfigurationManage.GetOption<RemoteEndPointConfig>().GetEndPoint(typeName);
-            if (endPoint == null)
-            {
-                throw new System.Exception("获取远程服务IP失败");
-            }
-            return endPoint;
-        }
-
-        public static int GetRequestTimeouMillis()
-        {
-            return ConfigurationManage.GetOption<RemoteEndPointConfig>().RequestTimeouMillis;
-        }
     }
 
     public class RemoteEndPointConfigGroupInfo
@@ -80,5 +69,12 @@ namespace NetCoreRpc.Client
         public string NameSpace { get; set; }
 
         public string Address { get; set; }
+    }
+
+    public class ZkConfig
+    {
+        public string Connection { get; set; }
+
+        public string ParentName { get; set; }
     }
 }

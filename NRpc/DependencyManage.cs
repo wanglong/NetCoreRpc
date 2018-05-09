@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using NRpc.Client;
+using NRpc.ConfigManage;
 using NRpc.Dependency;
 using NRpc.Dependency.AutofacContainer;
+using NRpc.LockManage;
 using NRpc.Logger;
 using NRpc.Scheduling;
 using NRpc.Serializing;
@@ -55,7 +57,15 @@ namespace NRpc
         {
             RemotingClientFactory.RegisterUnLoad();
             FileWatchUtil.RegisterUnLoad();
-            return Instance.UseDefaultSerializer().UseDefaultMethodSerializer().UseDefaultResponseSerializer().UseDefaultSchedule().UseSocket().UseDefaultServerRoute().UseNlog();
+            return Instance.UseDefaultSerializer()
+                           .UseDefaultConfigProvider()
+                           .UseDefaultLock()
+                           .UseDefaultMethodSerializer()
+                           .UseDefaultResponseSerializer()
+                           .UseDefaultSchedule()
+                           .UseSocket()
+                           .UseDefaultServerRoute()
+                           .UseNlog();
         }
 
         #region 注册

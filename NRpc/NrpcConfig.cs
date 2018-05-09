@@ -12,7 +12,7 @@ namespace NRpc
     /// 类功能描述：服务端地址配置
     /// 创建标识：yjq 2018/1/19 14:33:42
     /// </summary>
-    internal class NRpcConfig
+    public class NRpcConfig
     {
         private static IRouteCoordinator _RouteCoordinator;
 
@@ -31,6 +31,8 @@ namespace NRpc
         public List<RemoteEndPointConfigGroupInfo> Group { get; set; }
 
         public ZkConfig Zookeeper { get; set; }
+
+        public int MaxClientPoolCount { get; set; } = 200;
 
         public IPEndPoint GetEndPoint(string typeName)
         {
@@ -59,21 +61,6 @@ namespace NRpc
                 }
             }
             throw new System.Exception("服务端地址配置错误");
-        }
-
-        public static IPEndPoint GetServerEndPoint(string typeName)
-        {
-            var endPoint = NRpcConfigWatcher.CurrentConfig.GetEndPoint(typeName);
-            if (endPoint == null)
-            {
-                throw new System.Exception("获取远程服务IP失败");
-            }
-            return endPoint;
-        }
-
-        public static int GetRequestTimeouMillis()
-        {
-            return NRpcConfigWatcher.CurrentConfig.RequestTimeouMillis;
         }
     }
 

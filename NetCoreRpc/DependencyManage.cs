@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetCoreRpc.Client;
+using NetCoreRpc.Client.ConfigManage;
+using NetCoreRpc.LockManage;
 using NetCoreRpc.Scheduling;
 using NetCoreRpc.Serializing;
 using NetCoreRpc.ServerRoute;
@@ -23,7 +25,14 @@ namespace NetCoreRpc
         public static IServiceCollection UseRpc(this IServiceCollection serviceCollection)
         {
             RemotingClientFactory.RegisterUnLoad();
-            return serviceCollection.UseDefaultSerializer().UseDefaultMethodSerializer().UseDefaultResponseSerializer().UseDefaultSchedule().UseSocket().UseDefaultServerRoute();
+            return serviceCollection.UseDefaultSerializer()
+                                    .UseDefaultLock()
+                                    .UseDefaultRemoteEndPointConfigProvider()
+                                    .UseDefaultMethodSerializer()
+                                    .UseDefaultResponseSerializer()
+                                    .UseDefaultSchedule()
+                                    .UseSocket()
+                                    .UseDefaultServerRoute();
         }
 
         public static IServiceCollection UseZK(this IServiceCollection serviceCollection)
