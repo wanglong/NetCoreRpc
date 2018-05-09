@@ -2,6 +2,7 @@
 using NRpc.Transport.Remoting;
 using NRpc.Transport.Socketing;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
 
@@ -19,7 +20,7 @@ namespace NRpc.Server
         private IPEndPoint _iPEndPoint;
         private SocketRemotingServer _socketRemotingServer;
         private readonly IRouteCoordinator _routeCoordinator;
-        private IServerFilter _gloabFilter;
+        private List<IServerFilter> _gloabFilterList;
 
         public NRpcServer(int port) : this(SocketUtils.GetLocalIPV4(), port)
         {
@@ -30,6 +31,7 @@ namespace NRpc.Server
             _iPEndPoint = new IPEndPoint(ip, port);
 
             _routeCoordinator = DependencyManage.Resolve<ICoordinatorFactory>().Create();
+            _gloabFilterList = new List<IServerFilter>();
         }
 
         public NRpcServer(string ip, int port) : this(IPAddress.Parse(ip), port)
@@ -38,7 +40,7 @@ namespace NRpc.Server
 
         public void RegisterFilter<T>(T filter) where T : IServerFilter
         {
-            _gloabFilter = filter;
+            _gloabFilterList.Add(filter);
         }
 
         public void RegisterServerType(params Type[] serverType)
@@ -56,7 +58,7 @@ namespace NRpc.Server
 
         public void Start()
         {
-            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle(_gloabFilter));
+            _socketRemotingServer = new SocketRemotingServer(_iPEndPoint).RegisterRequestHandler(100, new NRpcHandle(_gloabFilterList));
             NRpcConfigWatcher.Install();
             _socketRemotingServer.Start();
             _routeCoordinator.RegisterAsync(_iPEndPoint).Wait();

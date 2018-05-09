@@ -1,4 +1,5 @@
 ﻿using NRpc.Transport.Remoting;
+using System.Collections.Generic;
 
 namespace NRpc.Server
 {
@@ -13,9 +14,9 @@ namespace NRpc.Server
     {
         private readonly ServerMethodCaller _serverMethodCaller;
 
-        public NRpcHandle(IServerFilter serverFilter)
+        public NRpcHandle(List<IServerFilter> list)
         {
-            _serverMethodCaller = new ServerMethodCaller(serverFilter);
+            _serverMethodCaller = new ServerMethodCaller(list);
         }
 
         public RemotingResponse HandleRequest(IRequestHandlerContext context, RemotingRequest remotingRequest)

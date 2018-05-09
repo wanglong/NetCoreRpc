@@ -4,6 +4,8 @@ using NRpc.Transport.Remoting;
 using NRpc.Utils;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -23,42 +25,59 @@ namespace NRpc.Server
         /// </summary>
         private static readonly MethodInfo HandleAsyncMethodInfo = typeof(ServerMethodCaller).GetMethod("ExecuteAsyncResultAction", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private readonly IServerFilter _serverFilter;
+        private readonly List<IServerFilter> _serverFilterList;
 
-        public ServerMethodCaller(IServerFilter serverFilter)
+        public ServerMethodCaller(List<IServerFilter> serverFilterList)
         {
-            _serverFilter = serverFilter;
+            _serverFilterList = serverFilterList;
         }
 
         private void OnActionExecuting(MethodInfo methodInfo, object[] param)
         {
-            try
+            var filterList = GetFilter(methodInfo);
+            if (filterList.Any())
             {
-                GetFilter(methodInfo)?.OnActionExecuting(methodInfo, param);
+                foreach (var filter in filterList)
+                {
+                    try
+                    {
+                        filter.OnActionExecuting(methodInfo, param);
+                    }
+                    catch { }
+                }
             }
-            catch { }
         }
 
         private void OnActionExecuted(MethodInfo methodInfo)
         {
-            try
+            var filterList = GetFilter(methodInfo);
+            if (filterList.Any())
             {
-                GetFilter(methodInfo)?.OnActionExecuted(methodInfo);
+                foreach (var filter in filterList)
+                {
+                    try
+                    {
+                        filter.OnActionExecuted(methodInfo);
+                    }
+                    catch { }
+                }
             }
-            catch { }
         }
 
         private void HandleException(MethodInfo methodInfo, Exception ex)
         {
-            try
+            var filterList = GetFilter(methodInfo);
+            if (filterList.Any())
             {
-                var filter = GetFilter(methodInfo);
-                if (filter != null)
+                foreach (var filter in filterList)
                 {
-                    filter.HandleException(methodInfo, ex);
+                    try
+                    {
+                        filter.HandleException(methodInfo, ex);
+                    }
+                    catch { }
                 }
             }
-            catch { }
         }
 
         /// <summary>
@@ -141,38 +160,45 @@ namespace NRpc.Server
             return DependencyManage.Resolve<IResponseSerailizer>().Serialize(obj, methodInfo);
         }
 
-        private static readonly ConcurrentDictionary<RuntimeMethodHandle, IServerFilter> _FilterDic = new ConcurrentDictionary<RuntimeMethodHandle, IServerFilter>();
+        private static readonly ConcurrentDictionary<RuntimeMethodHandle, IEnumerable<IServerFilter>> _FilterDic = new ConcurrentDictionary<RuntimeMethodHandle, IEnumerable<IServerFilter>>();
 
-        private IServerFilter GetFilter(MethodInfo methodInfo)
+        private IEnumerable<IServerFilter> GetFilter(MethodInfo methodInfo)
         {
             return _FilterDic.GetValue(methodInfo.MethodHandle, () =>
             {
-                var attributes = methodInfo.GetCustomAttributes();
-                if (attributes != null)
-                {
-                    foreach (Attribute item in attributes)
-                    {
-                        var attribute = item as IServerFilter;
-                        if (attribute != null)
-                        {
-                            return attribute;
-                        }
-                    }
-                }
-                var classAttribute = methodInfo.DeclaringType.GetCustomAttributes();
-                if (classAttribute != null)
-                {
-                    foreach (Attribute item in classAttribute)
-                    {
-                        var attribute = item as IServerFilter;
-                        if (attribute != null)
-                        {
-                            return attribute;
-                        }
-                    }
-                }
-                return _serverFilter;
+                return GetFilterList(methodInfo);
             });
+        }
+
+        private IEnumerable<IServerFilter> GetFilterList(MethodInfo methodInfo)
+        {
+            var attributes = methodInfo.GetCustomAttributes();
+            if (attributes != null)
+            {
+                foreach (Attribute item in attributes)
+                {
+                    if (item is IServerFilter attribute)
+                    {
+                        yield return attribute;
+                    }
+                }
+            }
+            var classAttribute = methodInfo.DeclaringType.GetCustomAttributes();
+            if (classAttribute != null)
+            {
+                foreach (Attribute item in classAttribute)
+                {
+                    var attribute = item as IServerFilter;
+                    if (attribute != null)
+                    {
+                        yield return attribute;
+                    }
+                }
+            }
+            foreach (var item in _serverFilterList)
+            {
+                yield return item;
+            }
         }
     }
 }
