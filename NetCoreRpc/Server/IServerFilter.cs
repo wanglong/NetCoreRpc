@@ -17,5 +17,6 @@ namespace NetCoreRpc.Server
         void OnActionExecuted(MethodInfo methodInfo);
 
         void HandleException(MethodInfo methodInfo, Exception ex);
+        bool Any();
     }
 }
