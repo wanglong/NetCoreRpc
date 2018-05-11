@@ -56,7 +56,7 @@ namespace NRpc.Transport.Socketing
             try
             {
                 _socket.Bind(_listeningEndPoint);
-                _socket.Listen(5000);
+                _socket.Listen(10000);
             }
             catch (Exception ex)
             {
