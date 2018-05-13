@@ -28,6 +28,10 @@ namespace NetCoreRpc.Transport.Remoting
         {
         }
 
+        public RemotingRequest(string id,short code, byte[] body, IDictionary<string, string> header = null) : this(id, code, Interlocked.Increment(ref _sequence), body, DateTime.Now, header)
+        {
+        }
+
         public RemotingRequest(short code, byte[] body, IDictionary<string, string> header = null) : this(ObjectId.GenerateNewStringId(), code, Interlocked.Increment(ref _sequence), body, DateTime.Now, header)
         {
         }

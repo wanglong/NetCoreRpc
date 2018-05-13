@@ -4,5 +4,9 @@
       "Connection": "192.168.100.34:2181",
       "ParentName": "/NetCoreRpc/ClientTest"
     }
+  },
+  "MongoDB": {
+    "Str": "mongodb://root:root@192.168.100.125:27017",
+    "DatabaseName": "Rpc_Monitor"
   }
 }

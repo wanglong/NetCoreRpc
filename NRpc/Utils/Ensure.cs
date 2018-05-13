@@ -9,7 +9,7 @@ namespace NRpc.Utils
     /// 类功能描述：判断断言工具类
     /// 创建标识：yjq 2018/1/17 18:53:53
     /// </summary>
-    internal static class Ensure
+    public static class Ensure
     {
         /// <summary>
         /// 断言值不为NULL

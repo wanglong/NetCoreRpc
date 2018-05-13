@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NetCoreRpc.Application\NetCoreRpc.Application.csproj" />
+    <ProjectReference Include="..\NetCoreRpc.MongoDB\NetCoreRpc.MongoDB.csproj" />
     <ProjectReference Include="..\NetCoreRpc\NetCoreRpc.csproj" />
   </ItemGroup>
 

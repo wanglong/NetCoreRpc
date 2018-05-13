@@ -96,6 +96,12 @@
     <Compile Include="ObjectId.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RpcMethodCallInfo.cs" />
+    <Compile Include="RpcMonitor\BaseRpcMonitorRequestInfo.cs" />
+    <Compile Include="RpcMonitor\DefaultRpcMonitor.cs" />
+    <Compile Include="RpcMonitor\IRpcMonitor.cs" />
+    <Compile Include="RpcMonitor\RpcMonitorRegisterExyension.cs" />
+    <Compile Include="RpcMonitor\RpcMonitorRequestErrorInfo.cs" />
+    <Compile Include="RpcMonitor\RpcMonitorRequestInfo.cs" />
     <Compile Include="Scheduling\IScheduleService.cs" />
     <Compile Include="Scheduling\ScheduleRegisterExtension.cs" />
     <Compile Include="Scheduling\ScheduleService.cs" />
@@ -214,6 +220,7 @@
     <Compile Include="Transport\SocketRegisterExtension.cs" />
     <Compile Include="Utils\ByteUtil.cs" />
     <Compile Include="Utils\CompressionUtil.cs" />
+    <Compile Include="Utils\DoubleBufferQueue.cs" />
     <Compile Include="Utils\Ensure.cs" />
     <Compile Include="Utils\ExceptionUtil.cs" />
     <Compile Include="Utils\FileUtil.cs" />

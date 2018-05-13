@@ -1,0 +1,11 @@
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\bin\Debug\netcoreapp2.0\NRpc.AdminManage.deps.json
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\bin\Debug\netcoreapp2.0\NRpc.AdminManage.runtimeconfig.json
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\bin\Debug\netcoreapp2.0\NRpc.AdminManage.runtimeconfig.dev.json
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\bin\Debug\netcoreapp2.0\NRpc.AdminManage.dll
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\obj\Debug\netcoreapp2.0\NRpc.AdminManage.csprojResolveAssemblyReference.cache
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\obj\Debug\netcoreapp2.0\NRpc.AdminManage.csproj.CoreCompileInputs.cache
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\obj\Debug\netcoreapp2.0\NRpc.AdminManage.AssemblyInfoInputs.cache
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\obj\Debug\netcoreapp2.0\NRpc.AdminManage.AssemblyInfo.cs
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\bin\Debug\netcoreapp2.0\NRpc.AdminManage.pdb
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\obj\Debug\netcoreapp2.0\NRpc.AdminManage.dll
+D:\SelfCode\NetCore\NetCoreRpc\NRpc.AdminManage\obj\Debug\netcoreapp2.0\NRpc.AdminManage.pdb

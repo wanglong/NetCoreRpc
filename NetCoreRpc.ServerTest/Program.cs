@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetCoreRpc.Application;
+using NetCoreRpc.MongoDB;
 using NetCoreRpc.Server;
 using NLog.Extensions.Logging;
 using System;
@@ -41,7 +42,14 @@ namespace NetCoreRpc.ServerTest
             services.AddSingleton<ILoggerFactory, LoggerFactory>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddSingleton<IStudentApplication, StudentApplication>();
-            services.UseRpc();//.UseZK();
+            var str = Configuration.GetValue<string>("MongoDB:Str");
+            var dbName = Configuration.GetValue<string>("MongoDB:DatabaseName");
+            services.UseRpc()
+                    .UseMongoDBMonitor(() =>
+                    {
+
+                        return new MonogoDbConfig(str, dbName);
+                    });//.UseZK();
             var serviceProvider = services.BuildServiceProvider();
 
             var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();

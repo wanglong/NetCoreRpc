@@ -54,6 +54,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NRpc.MongoDB\NRpc.MongoDB.csproj">
+      <Project>{9436853a-0db4-4d50-b6e9-2fa4d2b739bf}</Project>
+      <Name>NRpc.MongoDB</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NRpc\NRpc.csproj">
       <Project>{f435a05c-f993-46d6-aaf8-fe9204c6f239}</Project>
       <Name>NRpc</Name>

@@ -5,6 +5,7 @@ using NRpc.Dependency;
 using NRpc.Dependency.AutofacContainer;
 using NRpc.LockManage;
 using NRpc.Logger;
+using NRpc.RpcMonitor;
 using NRpc.Scheduling;
 using NRpc.Serializing;
 using NRpc.ServerRoute;
@@ -60,6 +61,7 @@ namespace NRpc
             return Instance.UseDefaultSerializer()
                            .UseDefaultConfigProvider()
                            .UseDefaultLock()
+                           .UseDefaultMonitor()
                            .UseDefaultMethodSerializer()
                            .UseDefaultResponseSerializer()
                            .UseDefaultSchedule()

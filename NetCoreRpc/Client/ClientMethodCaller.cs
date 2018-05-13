@@ -1,4 +1,5 @@
 ﻿using NetCoreRpc.Client.ConfigManage;
+using NetCoreRpc.RpcMonitor;
 using NetCoreRpc.Serializing;
 using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Utils;
@@ -28,6 +29,7 @@ namespace NetCoreRpc.Client
         private readonly IResponseSerailizer _responseSerailizer;
         private readonly Type _proxyType;
         private readonly IRemoteEndPointConfigProvider _remoteEndPointConfigProvider;
+        private readonly IRpcMonitor _rpcMonitor;
 
         public ClientMethodCaller(Type proxyType)
         {
@@ -35,6 +37,7 @@ namespace NetCoreRpc.Client
             _methodCallSerializer = DependencyManage.Resolve<IMethodCallSerializer>();
             _responseSerailizer = DependencyManage.Resolve<IResponseSerailizer>();
             _remoteEndPointConfigProvider = DependencyManage.Resolve<IRemoteEndPointConfigProvider>();
+            _rpcMonitor = DependencyManage.Resolve<IRpcMonitor>();
         }
 
         /// <summary>
@@ -46,20 +49,32 @@ namespace NetCoreRpc.Client
         /// <returns></returns>
         public object DoMethodCall(object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)
         {
-            var requestInfo = Create(arrMethodArgs, argmentTypes, methodInfo);
-            LogUtil.DebugFormat("RequestID {0} Start Request rpc Method：{1} {2}", requestInfo.Id, methodInfo.DeclaringType.FullName, methodInfo.Name);
-            var client = RemotingClientFactory.GetClient(_proxyType);
-            var response = client.InvokeSync(requestInfo, _remoteEndPointConfigProvider.GetConfig().RequestTimeouMillis);
-            var result = HandleResponse(response, methodInfo);
-            LogUtil.DebugFormat("RequestID {0} rpc Method CallBack：{1} {2}", requestInfo.Id, methodInfo.DeclaringType.FullName, methodInfo.Name);
-            return result;
+            var rpcMonitorRequestInfo = new RpcMonitorRequestInfo(methodInfo, argmentTypes?.Length ?? 0);
+            try
+            {
+                var requestInfo = Create(rpcMonitorRequestInfo, arrMethodArgs, argmentTypes, methodInfo);
+                var client = RemotingClientFactory.GetClient(_proxyType);
+                var response = client.InvokeSync(requestInfo, _remoteEndPointConfigProvider.GetConfig().RequestTimeouMillis);
+                var result = HandleResponse(response, methodInfo);
+                return result;
+            }
+            catch
+            {
+                rpcMonitorRequestInfo.IsSuccess = false;
+                throw;
+            }
+            finally
+            {
+                rpcMonitorRequestInfo.RequestEndTime = DateTime.Now;
+                _rpcMonitor.AddRpcRequest(rpcMonitorRequestInfo);
+            }
         }
 
-        private RemotingRequest Create(object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)
+        private RemotingRequest Create(RpcMonitorRequestInfo rpcMonitorRequestInfo, object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)
         {
             var methodCallInfo = RpcMethodCallInfo.Create(arrMethodArgs, methodInfo, _proxyType.FullName);
             var body = _methodCallSerializer.Serialize(methodCallInfo);
-            return new RemotingRequest(100, body);
+            return new RemotingRequest(rpcMonitorRequestInfo.RequestID, 100, body);
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace NetCoreRpc.Extensions
     /// 类功能描述：
     /// 创建标识：yjq 2018/1/17 20:06:36
     /// </summary>
-    internal static class ConcurrentDictionaryExtension
+    public static class ConcurrentDictionaryExtension
     {
         public static bool Remove<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dict, TKey key)
         {
@@ -34,6 +34,32 @@ namespace NetCoreRpc.Extensions
             value = action();
             conDic[key] = value;
             return value;
+        }
+
+        public static TValue GetValue<TKey, TKey1, TValue>(this ConcurrentDictionary<TKey, ConcurrentDictionary<TKey1, TValue>> conDic, TKey key, TKey1 key1, Func<TValue> action)
+        {
+            ConcurrentDictionary<TKey1, TValue> keyValue;
+            conDic.TryGetValue(key, out keyValue);
+            if (keyValue != null)
+            {
+                TValue value;
+                keyValue.TryGetValue(key1, out value);
+                if (value == null)
+                {
+                    value = action();
+                    keyValue.TryAdd(key1, value);
+                    conDic[key] = keyValue;
+                }
+                return value;
+            }
+            else
+            {
+                keyValue = new ConcurrentDictionary<TKey1, TValue>();
+                TValue value = action();
+                keyValue.TryAdd(key1, value);
+                conDic[key] = keyValue;
+                return value;
+            }
         }
     }
 }

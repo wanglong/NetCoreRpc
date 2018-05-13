@@ -1,4 +1,5 @@
 ﻿using NRpc.ConfigManage;
+using NRpc.RpcMonitor;
 using NRpc.Serializing;
 using NRpc.Transport.Remoting;
 using NRpc.Utils;
@@ -27,6 +28,7 @@ namespace NRpc.Client
         private readonly IResponseSerailizer _responseSerailizer;
         private readonly Type _proxyType;
         private readonly IConfigProvider _configProvider;
+        private readonly IRpcMonitor _rpcMonitor;
 
         public ClientMethodCaller(Type proxyType)
         {
@@ -34,6 +36,7 @@ namespace NRpc.Client
             _methodCallSerializer = DependencyManage.Resolve<IMethodCallSerializer>();
             _responseSerailizer = DependencyManage.Resolve<IResponseSerailizer>();
             _configProvider = DependencyManage.Resolve<IConfigProvider>();
+            _rpcMonitor = DependencyManage.Resolve<IRpcMonitor>();
         }
 
         /// <summary>
@@ -45,13 +48,25 @@ namespace NRpc.Client
         /// <returns></returns>
         public object DoMethodCall(object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)
         {
-            var requestInfo = Create(arrMethodArgs, argmentTypes, methodInfo);
-            LogUtil.DebugFormat("RequestID {0} Start Request rpc Method：{1} {2}", requestInfo.Id, methodInfo.DeclaringType.FullName, methodInfo.Name);
-            var client = RemotingClientFactory.GetClient(_proxyType);
-            var response = client.InvokeSync(requestInfo, _configProvider.GetConfig().RequestTimeouMillis);
-            var result = HandleResponse(response, methodInfo);
-            LogUtil.DebugFormat("RequestID {0} rpc Method CallBack：{1} {2}", requestInfo.Id, methodInfo.DeclaringType.FullName, methodInfo.Name);
-            return result;
+            var rpcMonitorRequestInfo = new RpcMonitorRequestInfo(methodInfo, argmentTypes?.Length ?? 0);
+            try
+            {
+                var requestInfo = Create(arrMethodArgs, argmentTypes, methodInfo);
+                var client = RemotingClientFactory.GetClient(_proxyType);
+                var response = client.InvokeSync(requestInfo, _configProvider.GetConfig().RequestTimeouMillis);
+                var result = HandleResponse(response, methodInfo);
+                return result;
+            }
+            catch
+            {
+                rpcMonitorRequestInfo.IsSuccess = false;
+                throw;
+            }
+            finally
+            {
+                rpcMonitorRequestInfo.RequestEndTime = DateTime.Now;
+                _rpcMonitor.AddRpcRequest(rpcMonitorRequestInfo);
+            }
         }
 
         private RemotingRequest Create(object[] arrMethodArgs, Type[] argmentTypes, MethodInfo methodInfo)

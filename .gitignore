@@ -24,3 +24,7 @@
 /NRpcSerializer/bin
 /NRpcSerializer.Test/obj
 /NRpcSerializer.Test/bin
+/NetCoreRpc.MongoDB/obj
+/NetCoreRpc.MongoDB/bin
+/NRpc.MongoDB/obj
+/NRpc.MongoDB/bin

@@ -1,5 +1,6 @@
 ﻿using NetCoreRpc.Application;
 using NRpc.Client;
+using NRpc.MongoDB;
 using NRpc.Serializing.Attributes;
 using System;
 using System.Text;
@@ -11,7 +12,10 @@ namespace NRpc.ClientTest
     {
         private static void Main(string[] args)
         {
-            DependencyManage.UseAutofacContainer().UseNRpc();
+            DependencyManage.UseAutofacContainer().UseNRpc().UseMongoDBMonitor(() =>
+            {
+                return new MonogoDbConfig("mongodb://root:root@192.168.100.125:27017", "Rpc_Monitor");
+            });
             NRpcConfigWatcher.Install();
             Console.WriteLine("Welcome to use NetCoreRpc!");
             Console.WriteLine("Input exit to exit");

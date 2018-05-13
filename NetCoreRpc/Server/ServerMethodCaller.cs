@@ -1,4 +1,5 @@
 ﻿using NetCoreRpc.Extensions;
+using NetCoreRpc.RpcMonitor;
 using NetCoreRpc.Serializing;
 using NetCoreRpc.Transport.Remoting;
 using NetCoreRpc.Utils;
@@ -25,11 +26,14 @@ namespace NetCoreRpc.Server
         /// 异步方法处理
         /// </summary>
         private static readonly MethodInfo HandleAsyncMethodInfo = typeof(ServerMethodCaller).GetMethod("ExecuteAsyncResultAction", BindingFlags.Instance | BindingFlags.NonPublic);
+
         private readonly List<IServerFilter> _serverFilterList;
+        private readonly IRpcMonitor _rpcMonitor;
 
         public ServerMethodCaller(List<IServerFilter> serverFilterList)
         {
             _serverFilterList = serverFilterList;
+            _rpcMonitor = DependencyManage.Resolve<IRpcMonitor>();
         }
 
         private void OnActionExecuting(MethodInfo methodInfo, object[] param)
@@ -92,18 +96,20 @@ namespace NetCoreRpc.Server
             using (var scope = DependencyManage.BeginScope())
             {
                 var obj = scope.ServiceProvider.GetService(classType);
+                MethodInfo executeMethodInfo = null;
                 try
                 {
                     LogUtil.InfoFormat("Begin Deal Rpc Request:{0}-{1}", requestMethodInfo.TypeName, requestMethodInfo.MethodName);
-                    var executeMethodInfo = ServerAssemblyUtil.GetMethod(requestMethodInfo.MethodName, classType) as MethodInfo;
+                    executeMethodInfo = ServerAssemblyUtil.GetMethod(requestMethodInfo.MethodName, classType) as MethodInfo;
                     if (executeMethodInfo == null)
                     {
-                        LogUtil.Info($"Not found Method{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName}");
+                        _rpcMonitor.AddError(new RpcMonitorRequestErrorInfo(requestMethodInfo, remotingRequest, "Not Found Method"));
                         return remotingRequest.CreateNotFoundResponse($"{requestMethodInfo.TypeName},{requestMethodInfo.MethodName}");
                     }
                     else
                     {
                         var delegateType = executeMethodInfo.GetMethodReturnType();
+                        OnActionExecuting(executeMethodInfo, requestMethodInfo.Parameters);
                         var executeResult = executeMethodInfo.Invoke(obj, requestMethodInfo.Parameters);
                         RemotingResponse remotingResponse;
                         if (delegateType == MethodType.SyncAction)
@@ -128,12 +134,14 @@ namespace NetCoreRpc.Server
                             remotingResponse = remotingRequest.CreateSuccessResponse(GetBody(result, executeMethodInfo));
                         }
                         LogUtil.InfoFormat("Rpc Method Dealed:{0}-{1}", requestMethodInfo.TypeName, requestMethodInfo.MethodName);
+                        OnActionExecuted(executeMethodInfo);
                         return remotingResponse;
                     }
                 }
                 catch (Exception e)
                 {
-                    LogUtil.Error($"excute{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName} failed", e);
+                    HandleException(executeMethodInfo, e);
+                    _rpcMonitor.AddError(new RpcMonitorRequestErrorInfo(requestMethodInfo, remotingRequest, e));
                     return remotingRequest.CreateDealErrorResponse();
                 }
             }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NetCoreRpc.Client;
 using NetCoreRpc.Client.ConfigManage;
 using NetCoreRpc.LockManage;
+using NetCoreRpc.RpcMonitor;
 using NetCoreRpc.Scheduling;
 using NetCoreRpc.Serializing;
 using NetCoreRpc.ServerRoute;
@@ -27,6 +28,7 @@ namespace NetCoreRpc
             RemotingClientFactory.RegisterUnLoad();
             return serviceCollection.UseDefaultSerializer()
                                     .UseDefaultLock()
+                                    .UseDefaultMonitor()
                                     .UseDefaultRemoteEndPointConfigProvider()
                                     .UseDefaultMethodSerializer()
                                     .UseDefaultResponseSerializer()

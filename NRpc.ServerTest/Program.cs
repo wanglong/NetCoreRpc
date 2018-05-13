@@ -1,4 +1,5 @@
 ﻿using NetCoreRpc.Application;
+using NRpc.MongoDB;
 using NRpc.Serializing.Attributes;
 using NRpc.Server;
 using System;
@@ -13,7 +14,10 @@ namespace NRpc.ServerTest
         {
             Console.WriteLine("请输入监听端口:");
             var strPort = Console.ReadLine();
-            DependencyManage.UseAutofacContainer().UseNRpc().RegisterType<IStudentApplication, StudentApplication>();
+            DependencyManage.UseAutofacContainer().UseNRpc().RegisterType<IStudentApplication, StudentApplication>().UseMongoDBMonitor(() =>
+            {
+                return new MonogoDbConfig("mongodb://root:root@192.168.100.125:27017", "Rpc_Monitor");
+            }); ;
             NRpcServer nrpcServer = new NRpcServer(int.Parse(strPort));
             nrpcServer.RegisterServerType(typeof(IStudentApplication));
             nrpcServer.Start();

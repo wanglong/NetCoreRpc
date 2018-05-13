@@ -1,4 +1,5 @@
 ﻿using NRpc.Extensions;
+using NRpc.RpcMonitor;
 using NRpc.Serializing;
 using NRpc.Transport.Remoting;
 using NRpc.Utils;
@@ -26,10 +27,12 @@ namespace NRpc.Server
         private static readonly MethodInfo HandleAsyncMethodInfo = typeof(ServerMethodCaller).GetMethod("ExecuteAsyncResultAction", BindingFlags.Instance | BindingFlags.NonPublic);
 
         private readonly List<IServerFilter> _serverFilterList;
+        private readonly IRpcMonitor _rpcMonitor;
 
         public ServerMethodCaller(List<IServerFilter> serverFilterList)
         {
             _serverFilterList = serverFilterList;
+            _rpcMonitor = DependencyManage.Resolve<IRpcMonitor>();
         }
 
         private void OnActionExecuting(MethodInfo methodInfo, object[] param)
@@ -99,7 +102,7 @@ namespace NRpc.Server
                     executeMethodInfo = ServerAssemblyUtil.GetMethod(requestMethodInfo.MethodName, classType) as MethodInfo;
                     if (executeMethodInfo == null)
                     {
-                        LogUtil.Info($"Not found Method{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName}");
+                        _rpcMonitor.AddError(new RpcMonitorRequestErrorInfo(requestMethodInfo, remotingRequest, "Not Found Method"));
                         return remotingRequest.CreateNotFoundResponse($"{requestMethodInfo.TypeName},{requestMethodInfo.MethodName}");
                     }
                     else
@@ -136,7 +139,7 @@ namespace NRpc.Server
                 }
                 catch (Exception e)
                 {
-                    LogUtil.Error($"excute{requestMethodInfo.TypeName}-{requestMethodInfo.MethodName} failed", e);
+                    _rpcMonitor.AddError(new RpcMonitorRequestErrorInfo(requestMethodInfo, remotingRequest, e));
                     HandleException(executeMethodInfo, e);
                     return remotingRequest.CreateDealErrorResponse();
                 }
