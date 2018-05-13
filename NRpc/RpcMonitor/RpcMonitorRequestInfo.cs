@@ -10,7 +10,10 @@ namespace NRpc.RpcMonitor
     /// </summary>
     public class RpcMonitorRequestInfo : BaseRpcMonitorRequestInfo
     {
-        public RpcMonitorRequestInfo() { }
+        public RpcMonitorRequestInfo()
+        {
+        }
+
         public RpcMonitorRequestInfo(MethodInfo methodInfo, int argumentCount) : base(ObjectId.GenerateNewStringId(), methodInfo.DeclaringType.FullName, methodInfo.Name, argumentCount)
         {
         }

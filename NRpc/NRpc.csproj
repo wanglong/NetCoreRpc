@@ -52,6 +52,7 @@
     <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -229,6 +230,7 @@
     <Compile Include="Utils\MethodUtil.cs" />
     <Compile Include="NRpcConfigWatcher.cs" />
     <Compile Include="Utils\TypeUtil.cs" />
+    <Compile Include="Utils\WebUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
