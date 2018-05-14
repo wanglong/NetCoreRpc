@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using NRpc.MongoDB.Models;
 using NRpc.RpcMonitor;
 using NRpc.Utils;
 using System.Collections.Generic;
@@ -10,17 +11,17 @@ namespace NRpc.MongoDB.RpcMonitor
     /// 类功能描述：
     /// 创建标识：yjq 2018/5/13 16:53:37
     /// </summary>
-    public class RpcMonitorRequestErrorRepository : MongoBaseRepository<RpcMonitorRequestErrorInfo>
+    public class RpcMonitorRequestErrorRepository : MongoBaseRepository<RpcMonitorRequestErrorModel>
     {
         public RpcMonitorRequestErrorRepository() : base(new MongoDatabaseProvider(), MonogoDbConfig.GetConfig())
         {
         }
 
-        protected override IMongoCollection<RpcMonitorRequestErrorInfo> Collection
+        protected override IMongoCollection<RpcMonitorRequestErrorModel> Collection
         {
             get
             {
-                return Database.GetCollection<RpcMonitorRequestErrorInfo>("RpcMonitor_RequestError");
+                return Database.GetCollection<RpcMonitorRequestErrorModel>("RpcMonitor_RequestError");
             }
         }
 
@@ -28,24 +29,24 @@ namespace NRpc.MongoDB.RpcMonitor
         {
             if (rpcMonitorRequestInfo != null)
             {
-                _RpcMonitorRequestMessageQueue.EnqueueMessage(rpcMonitorRequestInfo);
+                _RpcMonitorRequestMessageQueue.EnqueueMessage(RpcMonitorRequestErrorModel.Create(rpcMonitorRequestInfo));
             }
         }
 
         #region 利用双缓冲队列进行插入
 
-        private static DoubleBufferQueue<RpcMonitorRequestErrorInfo> _RpcMonitorRequestMessageQueue = new DoubleBufferQueue<RpcMonitorRequestErrorInfo>(20000, MessageHandle, HaveNoCountHandle);
+        private static DoubleBufferQueue<RpcMonitorRequestErrorModel> _RpcMonitorRequestMessageQueue = new DoubleBufferQueue<RpcMonitorRequestErrorModel>(20000, MessageHandle, HaveNoCountHandle);
 
         /// <summary>
         /// 消息列表
         /// </summary>
-        private static List<RpcMonitorRequestErrorInfo> _RpcMonitorRequestMessageList = new List<RpcMonitorRequestErrorInfo>();
+        private static List<RpcMonitorRequestErrorModel> _RpcMonitorRequestMessageList = new List<RpcMonitorRequestErrorModel>();
 
         /// <summary>
         /// 信息处理的方法
         /// </summary>
         /// <param name="message">要处理的信息</param>
-        private static void MessageHandle(RpcMonitorRequestErrorInfo message)
+        private static void MessageHandle(RpcMonitorRequestErrorModel message)
         {
             if (_RpcMonitorRequestMessageList.Count > 100)
             {
@@ -64,7 +65,7 @@ namespace NRpc.MongoDB.RpcMonitor
             _RpcMonitorRequestMessageList.Clear();
         }
 
-        private static void AddRpcMonitorRequestList(List<RpcMonitorRequestErrorInfo> rpcMonitorRequestInfos)
+        private static void AddRpcMonitorRequestList(List<RpcMonitorRequestErrorModel> rpcMonitorRequestInfos)
         {
             var rpcMonitorRequestErrorRepository = new RpcMonitorRequestErrorRepository();
             rpcMonitorRequestErrorRepository.InsertMany(rpcMonitorRequestInfos);

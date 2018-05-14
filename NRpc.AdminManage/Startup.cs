@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +23,15 @@ namespace NRpc.AdminManage
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            NetCoreRpc.MongoDB.MonogoDbConfig.SetConfig(() =>
+            {
+                return new NetCoreRpc.MongoDB.MonogoDbConfig
+                {
+                    ConnectionString = "mongodb://root:root@192.168.100.125:27017",
+                    DatabaseName = "Rpc_Monitor"
+                };
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -39,7 +44,12 @@ namespace NRpc.AdminManage
 
             app.UseStaticFiles();
 
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }

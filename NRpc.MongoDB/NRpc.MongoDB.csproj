@@ -63,6 +63,8 @@
     <Compile Include="Extensions\UpdateExtension.cs" />
     <Compile Include="IMongoDatabaseProvider.cs" />
     <Compile Include="IMongoDbBaseRepository.cs" />
+    <Compile Include="Models\RpcMonitorRequestErrorModel.cs" />
+    <Compile Include="Models\RpcMonitorRequestModel.cs" />
     <Compile Include="MongoBaseRepository.cs" />
     <Compile Include="MongoDatabaseProvider.cs" />
     <Compile Include="MongoDbRegisterExtension.cs" />

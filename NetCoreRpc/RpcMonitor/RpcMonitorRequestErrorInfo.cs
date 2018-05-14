@@ -25,6 +25,8 @@ namespace NetCoreRpc.RpcMonitor
         {
         }
 
+        public DateTime RequestTime { get; set; } = DateTime.Now;
+
         public string ErrorMsg { get; set; }
 
         public override string ToString()
