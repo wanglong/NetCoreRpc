@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using NetCoreRpc.MongoDB.RpcMonitor;
+using NRpc.AdminManage.Infrastructure.MongoUtil;
 using System;
-using System.Linq;
 
 namespace NRpc.AdminManage.Controllers
 {
@@ -22,7 +21,7 @@ namespace NRpc.AdminManage.Controllers
             var startTime = DateTime.Now.AddMinutes(-60);
             var endTime = DateTime.Now;
             var rpcMonitorRequestRepository = new RpcMonitorRequestRepository();
-            var result = rpcMonitorRequestRepository.StatisticsExcute(startTime, endTime).ToList();
+            var result = rpcMonitorRequestRepository.StatisticsExcute(startTime, endTime);
             return Json(result);
         }
     }

@@ -17,7 +17,6 @@
 </head>
 <body>
 
-
     <div class="admin">
         <!--<div class="am-g">-->
         <!-- ========== Left Sidebar Start ========== -->
@@ -69,6 +68,39 @@
 
                 <div class="am-g">
                     <!-- Row start -->
+
+                    <div class="am-u-md-4">
+                        <div class="card-box">
+                            <h4 class="header-title m-t-0">执行统计</h4>
+                            <div class="widget-chart-1 am-cf">
+                                <div class="widget-detail-1" style="float: left;">
+                                    <h2 class="p-t-10 m-b-0 text-center" id="TotalExcuteCount"></h2>
+                                    <p class="text-muted text-center">执行总数</p>
+                                </div>
+                                <div class="widget-detail-1" style="float: left;">
+                                    <h2 class="p-t-10 m-b-0 text-center text-danger" id="TotalErrorCount"></h2>
+                                    <p class="text-muted text-center">错误数量</p>
+                                </div>
+                                <div class="widget-detail-1" style="float: left;">
+                                    <h2 class="p-t-10 m-b-0 text-center" id="EverySecondExcuteCount"></h2>
+                                    <p class="text-muted text-center">平均每秒执行</p>
+                                </div>
+                                <div class="widget-detail-1" style="float: left;">
+                                    <h2 class="p-t-10 m-b-0 text-center" id="AvgExcutedMillisecond"></h2>
+                                    <p class="text-muted text-center">平均耗时</p>
+                                </div>
+                                <div class="widget-detail-1" style="float: left;">
+                                    <h2 class="p-t-10 m-b-0 text-center" id="MaxExcutedMillisecond"></h2>
+                                    <p class="text-muted text-center">最大耗时</p>
+                                </div>
+                                <div class="widget-detail-1" style="float: left;">
+                                    <h2 class="p-t-10 m-b-0 text-center" id="MinExcutedMillisecond"></h2>
+                                    <p class="text-muted text-center">最小耗时</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="am-u-md-8">
                         <div class="card-box">
                             <h4 class="header-title m-t-0">执行数量</h4>
@@ -76,12 +108,18 @@
                         </div>
                     </div>
 
-                    @*<div class="am-u-md-4">
+                    <!-- Row end -->
+                </div>
+
+                <div class="am-g">
+                    <!-- Row start -->
+
+                    <div class="am-u-md-12">
                         <div class="card-box">
-                            <h4 class="header-title m-t-0">环形图</h4>
-                            <div id="index-bar-1" style="height: 345px;height: 300px;"></div>
+                            <h4 class="header-title m-t-0">执行耗时</h4>
+                            <div id="statis-excute-spend" style="height: 300px"></div>
                         </div>
-                    </div>*@
+                    </div>
 
                     <!-- Row end -->
                 </div>
@@ -234,7 +272,6 @@
                     <!-- Row end -->
                 </div>
 
-
                 <!-- Row start -->
                 <div class="am-g">
                     <!-- col start -->
@@ -363,7 +400,6 @@
                                             <td><span class="label label-primary">即将开始</span></td>
                                             <td>Adminto admin</td>
                                         </tr>
-
                                     </tbody>
                                 </table>
                             </div>
@@ -371,10 +407,6 @@
                     </div>
                     <!-- col end -->
                 </div>
-
-
-
-
             </div>
         </div>
         <!-- end right Content here -->
@@ -396,27 +428,42 @@
                 url: "/Home/LoadExcuteCount",
                 success: function (data) {
                     console.log(data);
-                    var myChart = echarts.init(document.getElementById("statis-excute-count"));
-                    var seriesData = createSeries(data);
-                    var option = createOption(['执行数量', '错误数量'], data[0].timeArray, seriesData)
+                    setTotalStatistic(data);
+                    var excuteCountChart = echarts.init(document.getElementById("statis-excute-count"));
+                    var excuteCountSeriesData = createSeries(data.statisticList, ['执行数量', '错误数量']);
+                    var excuteCountOption = createOption(['执行数量', '错误数量'], data.statisticList[0].timeArray, excuteCountSeriesData)
+                    excuteCountChart.setOption(excuteCountOption);
 
-                    myChart.setOption(option);
+                    var excuteSpendChart = echarts.init(document.getElementById("statis-excute-spend"));
+                    var excuteSpendSeriesData = createSeries(data.statisticList, ['平均耗时', '最大耗时', '最小耗时']);
+                    var excuteSpendOption = createOption(['平均耗时', '最大耗时', '最小耗时'], data.statisticList[0].timeArray, excuteSpendSeriesData)
+                    excuteSpendChart.setOption(excuteSpendOption);
 
-                    function createSeries(data, desc) {
-                        var array = new Array();
-                        for (var i = 0; i < data.length; i++) {
-                            if (data[i].description == "执行数量" || data[i].description == "错误数量") {
-                                array.push({ name: data[i].description, data: data[i].valueList, type: 'line', });
-                            }
-
-                        }
-                        return array;
-                    }
                 }
             })
 
+            function setTotalStatistic(data) {
+                $("#TotalExcuteCount").text(data.totalExcuteCount);
+                $("#TotalErrorCount").text(data.totalErrorCount);
+                $("#EverySecondExcuteCount").text(data.everySecondExcuteCount);
+                $("#AvgExcutedMillisecond").text(data.avgExcutedMillisecond.toFixed(3) + 'ms');
+                $("#MaxExcutedMillisecond").text(data.maxExcutedMillisecond.toFixed(3) + 'ms');
+                $("#MinExcutedMillisecond").text(data.minExcutedMillisecond.toFixed(3) + 'ms');
+            }
 
         })();
+
+        function createSeries(data, descArray) {
+            var array = new Array();
+            for (var i = 0; i < data.length; i++) {
+                if ($.inArray(data[i].description, descArray) >= 0) {
+                    array.push({ name: data[i].description, data: data[i].valueList, type: 'line', });
+                }
+
+            }
+            return array;
+        }
+
         function createOption(legendData, xAxisData, seriesData) {
             return {
                 tooltip: {
@@ -426,7 +473,6 @@
                     data: legendData,
                     x: "right"
                 },
-
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
@@ -441,5 +487,4 @@
         }
     </script>
 </body>
-
 </html>

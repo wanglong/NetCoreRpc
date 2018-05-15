@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NetCoreRpc.MongoDB.Dtos
+namespace NRpc.AdminManage.Dtos
 {
     /// <summary>
     /// 类名：RpcMonitorRequestDto.cs
@@ -9,8 +9,6 @@ namespace NetCoreRpc.MongoDB.Dtos
     /// </summary>
     public class RpcMonitorRequestDto
     {
-        public string RequestTypeName { get; set; }
-        public string RequestMethodName { get; set; }
         public bool IsSuccess { get; set; }
         public int TotalCount { get; set; }
         public string ExcutedTime { get; set; }
