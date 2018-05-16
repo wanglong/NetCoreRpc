@@ -146,5 +146,101 @@ namespace NRpc.AdminManage.Infrastructure.MongoUtil
                 }
             }
         }
+
+        /// <summary>
+        /// 获取执行方法统计
+        /// </summary>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <returns></returns>
+        public IEnumerable<RpcMonitorMethodRequestDto> StatisticsExcuteMethod(DateTime startTime, DateTime endTime, int pageIndex, int pageSize, out int TotalCount)
+        {
+            #region group
+
+            var group = new BsonDocument
+            {
+                { "_id", new BsonDocument
+                    {
+                       { "RequestTypeName","$RequestTypeName"},
+                       { "RequestMethodName","$RequestMethodName"},
+                       { "RequestParameterCount","$RequestParameterCount"}
+                    }
+                },
+                { "Count", new BsonDocument("$sum", 1) },
+                { "MaxExcutedMillisecond", new BsonDocument("$max", "$TotalMillisecond") },
+                { "MinExcutedMillisecond", new BsonDocument("$min", "$TotalMillisecond") },
+                { "AvgExcutedMillisecond", new BsonDocument("$avg", "$TotalMillisecond") },
+                { "ErrorCount",new BsonDocument
+                    {
+                        { "$sum", new BsonDocument
+                        {
+                            {"$cond", new BsonArray
+                                {
+                                    new BsonDocument
+                                    {
+                                        {
+                                            "$eq", new BsonArray { "$IsSuccess", true}
+                                        }
+                                    },
+                                    0,
+                                    1
+                                }
+                            }
+                        }
+                    }
+                    }
+                },
+            };
+
+            #endregion group
+
+            #region project
+
+            var project = new BsonDocument
+            {
+                {
+                    "_id",0
+                },
+                {
+                    "RequestTypeName","$_id.RequestTypeName"
+                },
+                {
+                    "RequestMethodName","$_id.RequestMethodName"
+                },
+                {
+                    "RequestParameterCount","$_id.RequestParameterCount"
+                },
+                {
+                    "TotalExcuteCount","$Count"
+                },
+                {
+                    "ErrorCount","$ErrorCount"
+                },
+                {
+                    "MaxExcutedMillisecond","$MaxExcutedMillisecond"
+                },
+                {
+                    "MinExcutedMillisecond","$MinExcutedMillisecond"
+                },
+                {
+                    "AvgExcutedMillisecond","$AvgExcutedMillisecond"
+                }
+            };
+
+            #endregion project
+
+            var sort = new BsonDocument { {
+                    "ErrorCount",-1
+                },{ "AvgExcutedMillisecond",-1}
+            };
+
+            TotalCount = (int)(Collection.Aggregate().Match(m => m.RequestStartTime >= startTime && m.RequestStartTime <= endTime).Group(group).Project<RpcMonitorMethodRequestDto>(project).Count().FirstOrDefault()?.Count ?? 0);
+
+            var skipIndex = (pageIndex - 1) * pageSize;
+            pageSize = pageSize < 0 ? 30 : (pageSize > 1000 ? 1000 : pageSize);
+            return Collection.Aggregate()
+           .Match(m => m.RequestStartTime >= startTime && m.RequestStartTime <= endTime)
+           .Group(group).Project<RpcMonitorMethodRequestDto>(project).Sort(sort).Skip(skipIndex < 0 ? 0 : skipIndex).Limit(pageSize).ToList();
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace NRpc.AdminManage.Infrastructure.MongoUtil
             };
             TotalCount = (int)Collection.Count(m => m.RequestTime >= startTime && m.RequestTime <= endTime);
             return Collection.Find(m => m.RequestTime >= startTime && m.RequestTime <= endTime)
-                             .Project(projectionExpression.ToProjection()).Skip(skipIndex > 0 ? 0 : skipIndex).Limit(pageSize).ToEnumerable();
+                             .Project(projectionExpression.ToProjection()).Skip(skipIndex < 0 ? 0 : skipIndex).Limit(pageSize).ToEnumerable();
         }
     }
 }

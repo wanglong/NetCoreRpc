@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace NRpc.AdminManage.Dtos
+﻿namespace NRpc.AdminManage.Dtos
 {
     public class RpcMonitorMethodRequestDto
     {
@@ -11,8 +6,16 @@ namespace NRpc.AdminManage.Dtos
 
         public string RequestMethodName { get; set; }
 
+        public int RequestParameterCount { get; set; }
+
         public int TotalExcuteCount { get; set; }
 
         public int ErrorCount { get; set; }
+
+        public double MaxExcutedMillisecond { get; set; }
+
+        public double MinExcutedMillisecond { get; set; }
+
+        public double AvgExcutedMillisecond { get; set; }
     }
 }

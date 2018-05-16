@@ -18,18 +18,12 @@
 <body>
 
     <div class="admin">
-        <!--<div class="am-g">-->
-        <!-- ========== Left Sidebar Start ========== -->
-        <!--<div class="left side-menu am-hide-sm-only am-u-md-1 am-padding-0">
-            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 548px;">
-                <div class="sidebar-inner slimscrollleft" style="overflow: hidden; width: auto; height: 548px;">-->
-        <!-- sidebar start -->
         <div class="admin-sidebar am-offcanvas  am-padding-0" id="admin-offcanvas">
             <div class="am-offcanvas-bar admin-offcanvas-bar">
 
                 <ul class="am-list admin-sidebar-list">
-                    <li><a href="index.html"><span class="am-icon-home"></span> 首页</a></li>
-                    <li class="admin-parent">
+                    <li><a href="/Home"><span class="am-icon-home"></span> 首页</a></li>
+                    @*<li class="admin-parent">
                         <a class="am-cf" data-am-collapse="{target: '#collapse-nav1'}"><span class="am-icon-table"></span> 表格 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
                         <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav1">
                             <li><a href="html/table_basic.html" class="am-cf"> 基本表格</span></a></li>
@@ -50,21 +44,30 @@
                             <li><a href="html/form_basic.html" class="am-cf"> 基本表单</a></li>
                             <li><a href="html/form_validate.html">表单验证</a></li>
                         </ul>
-                    </li>
+                    </li>*@
                 </ul>
             </div>
         </div>
-        <!-- sidebar end -->
-        <!--</div>
-            </div>
-        </div>-->
-        <!-- ========== Left Sidebar end ========== -->
-        <!--	<div class="am-g">-->
-        <!-- ============================================================== -->
+
         <!-- Start right Content here -->
         <div class="content-page">
             <!-- Start content -->
             <div class="content">
+
+                <div class="am-g" style="margin-bottom:30px;">
+
+                    <div class="am-u-md-12">
+                        <select class=" am-radius" style="width:120px;" id="timeType">
+                            <option value="">自定义</option>
+                            <option value="30" @(ViewBag.TimeType != null && ViewBag.TimeType == 30 ? "selected" : "")>近30分钟</option>
+                            <option value="60" @(ViewBag.TimeType != null && ViewBag.TimeType == 60 ? "selected" : "")>近一小时</option>
+                            <option value="120" @(ViewBag.TimeType != null && ViewBag.TimeType == 120 ? "selected" : "")>近两小时分钟</option>
+                        </select>
+                        <label>起始时间：</label> <input type="text" style="width:150px;" id="startTime" onClick="WdatePicker({el:this,dateFmt:'yyyy-MM-dd HH:mm',maxDate:'#F{$dp.$D(\'endTime\')||\'%y-%M-%d %H:%m\'}'})">
+                        <label>结束时间：</label> <input type="text" id="endTime" style="width:150px;" onClick="WdatePicker({el:this,dateFmt:'yyyy-MM-dd HH:mm',maxDate:'%y-%M-%d %H:%m',minDate:'#F{$dp.$D(\'startTime\')}'})">
+                        <button class="am-btn am-btn-default" type="button" onclick="Install()">搜索</button>
+                    </div>
+                </div>
 
                 <div class="am-g">
                     <!-- Row start -->
@@ -125,292 +128,61 @@
                 </div>
 
                 <div class="am-g">
-                    <!-- Row start -->
-                    <div class="am-u-md-3">
-                        <div class="card-box">
-                            <h4 class="header-title m-t-0 m-b-30">总收入</h4>
-                            <div class="widget-chart-1 am-cf">
-                                <div id="widget-chart-box-1" style="height: 110px;width: 110px;float: left;">
-                                </div>
-
-                                <div class="widget-detail-1" style="float: right;">
-                                    <h2 class="p-t-10 m-b-0"> 256 </h2>
-                                    <p class="text-muted">今日收入</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- col end -->
-                    <div class="am-u-md-3">
-                        <div class="card-box">
-                            <h4 class="header-title m-t-0 m-b-30">销售分析</h4>
-                            <div class="widget-box-2">
-                                <div class="widget-detail-2">
-                                    <span class="badge  pull-left m-t-20  am-round" style="color: #fff; background: #0e90d2;">32% <i class="zmdi zmdi-trending-up"></i> </span>
-                                    <h2 class="m-b-0"> 8451 </h2>
-                                    <p class="text-muted m-b-25">Revenue today</p>
-                                </div>
-                                <div class="am-progress am-progress-xs am-margin-bottom-0">
-                                    <div class="am-progress-bar" style="width: 80%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- col end -->
-                    <div class="am-u-md-3">
-                        <div class="card-box">
-                            <h4 class="header-title m-t-0 m-b-30">总收入</h4>
-                            <div class="widget-chart-1 am-cf">
-                                <div id="widget-chart-box-2" style="height: 110px;width: 110px;float: left;">
-                                </div>
-
-                                <div class="widget-detail-1" style="float: right;">
-                                    <h2 class="p-t-10 m-b-0"> 256 </h2>
-                                    <p class="text-muted">今日收入</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- col end -->
-                    <div class="am-u-md-3">
-                        <div class="card-box">
-                            <h4 class="header-title m-t-0 m-b-30">销售分析</h4>
-                            <div class="widget-box-2">
-                                <div class="widget-detail-2">
-                                    <span class="badge  pull-left m-t-20  am-round progress-bar-pink" style="color: #fff;">32% <i class="zmdi zmdi-trending-up"></i> </span>
-                                    <h2 class="m-b-0"> 8451 </h2>
-                                    <p class="text-muted m-b-25">Revenue today</p>
-                                </div>
-                                <div class="am-progress am-progress-xs am-margin-bottom-0" style="background: rgba(255, 138, 204, 0.2);">
-                                    <div class="am-progress-bar progress-bar-pink" style="width: 80%"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Row end -->
-                </div>
-
-                <div class="am-g">
-                    <!-- Row start -->
-                    <div class="am-u-md-4">
-                        <div class="card-box">
-                            <h4 class="header-title m-t-0">环形图</h4>
-                            <div id="index-pie-1" style="height: 345px;height: 300px;"></div>
-                        </div>
-                    </div>
-
-                    <div class="am-u-md-4">
-                        <div class="card-box">
-                            <h4 class="header-title m-t-0">环形图</h4>
-                            <div id="index-bar-1" style="height: 345px;height: 300px;"></div>
-                        </div>
-                    </div>
-
-                    <div class="am-u-md-4">
-                        <div class="card-box">
-                            <h4 class="header-title m-t-0">环形图</h4>
-                            <div id="index-line-1" style="height: 345px;height: 300px;"></div>
-                        </div>
-                    </div>
-                    <!-- Row end -->
-                </div>
-
-                <div class="am-g">
-                    <!-- Row start -->
-                    <div class="am-u-md-3">
-                        <div class="card-box widget-user">
-                            <div>
-                                <img src="/img/avatar-3.jpg" class="img-responsive img-circle" alt="user">
-                                <div class="wid-u-info">
-                                    <h4 class="m-t-0 m-b-5 font-600">Chadengle</h4>
-                                    <p class="text-muted m-b-5 font-13">coderthemes@gmail.com</p>
-                                    <small class="text-warning"><b>管理员</b></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- col end -->
-                    <div class="am-u-md-3">
-                        <div class="card-box widget-user">
-                            <div>
-                                <img src="/img/avatar-2.jpg" class="img-responsive img-circle" alt="user">
-                                <div class="wid-u-info">
-                                    <h4 class="m-t-0 m-b-5 font-600">Chadengle</h4>
-                                    <p class="text-muted m-b-5 font-13">coderthemes@gmail.com</p>
-                                    <small class="text-custom"><b>网络组主管</b></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- col end -->
-                    <div class="am-u-md-3">
-                        <div class="card-box widget-user">
-                            <div>
-                                <img src="/img/avatar-4.jpg" class="img-responsive img-circle" alt="user">
-                                <div class="wid-u-info">
-                                    <h4 class="m-t-0 m-b-5 font-600">Chadengle</h4>
-                                    <p class="text-muted m-b-5 font-13">coderthemes@gmail.com</p>
-                                    <small class="text-success"><b>设计师</b></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- col end -->
-                    <div class="am-u-md-3">
-                        <div class="card-box widget-user">
-                            <div>
-                                <img src="/img/avatar-10.jpg" class="img-responsive img-circle" alt="user">
-                                <div class="wid-u-info">
-                                    <h4 class="m-t-0 m-b-5 font-600">Chadengle</h4>
-                                    <p class="text-muted m-b-5 font-13">coderthemes@gmail.com</p>
-                                    <small class="text-info"><b>开发者</b></small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- col end -->
-                    <!-- Row end -->
-                </div>
-
-                <!-- Row start -->
-                <div class="am-g">
                     <!-- col start -->
-                    <div class="am-u-md-4">
+                    <div class="am-u-md-12">
                         <div class="card-box">
-                            <h4 class="header-title m-t-0 m-b-30">收件箱</h4>
-                            <div class="inbox-widget nicescroll" style="height: 315px; overflow: hidden; outline: none;" tabindex="5000">
-                                <a href="#">
-                                    <div class="inbox-item">
-                                        <div class="inbox-item-img"><img src="/img/avatar-1.jpg" class="img-circle" alt=""></div>
-                                        <p class="inbox-item-author">Chadengle</p>
-                                        <p class="inbox-item-text">Hey! there I'm available...</p>
-                                        <p class="inbox-item-date">13:40 PM</p>
-                                    </div>
-                                </a>
-                                <a href="#">
-                                    <div class="inbox-item">
-                                        <div class="inbox-item-img"><img src="/img/avatar-2.jpg" class="img-circle" alt=""></div>
-                                        <p class="inbox-item-author">Shahedk</p>
-                                        <p class="inbox-item-text">Hey! there I'm available...</p>
-                                        <p class="inbox-item-date">10:15 AM</p>
-                                    </div>
-                                </a>
-                                <a href="#">
-                                    <div class="inbox-item">
-                                        <div class="inbox-item-img"><img src="/img/avatar-10.jpg" class="img-circle" alt=""></div>
-                                        <p class="inbox-item-author">Tomaslau</p>
-                                        <p class="inbox-item-text">I've finished it! See you so...</p>
-                                        <p class="inbox-item-date">13:34 PM</p>
-                                    </div>
-                                </a>
-                                <a href="#">
-                                    <div class="inbox-item">
-                                        <div class="inbox-item-img"><img src="/img/avatar-4.jpg" class="img-circle" alt=""></div>
-                                        <p class="inbox-item-author">Stillnotdavid</p>
-                                        <p class="inbox-item-text">This theme is awesome!</p>
-                                        <p class="inbox-item-date">13:17 PM</p>
-                                    </div>
-                                </a>
-                                <a href="#">
-                                    <div class="inbox-item">
-                                        <div class="inbox-item-img"><img src="/img/avatar-5.jpg" class="img-circle" alt=""></div>
-                                        <p class="inbox-item-author">Kurafire</p>
-                                        <p class="inbox-item-text">Nice to meet you</p>
-                                        <p class="inbox-item-date">12:20 PM</p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- col end -->
-                    <!-- col start -->
-                    <div class="am-u-md-8">
-                        <div class="card-box">
-                            <h4 class="header-title m-t-0 m-b-30">最新项目</h4>
+                            <h4 class="header-title m-t-0 m-b-30">方法请求列表</h4>
                             <div class="am-scrollable-horizontal am-text-ms" style="font-family: '微软雅黑';">
-                                <table class="am-table   am-text-nowrap">
+                                <table class="am-table am-text-nowrap" id="MethodRequestList">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>项目名称</th>
-                                            <th>开始时间</th>
-                                            <th>结束时间</th>
-                                            <th>状态</th>
-                                            <th>责任人</th>
+                                            <th class='text-center'>方法信息</th>
+                                            <th class='text-center'>请求次数</th>
+                                            <th class='text-center'>错误次数</th>
+                                            <th class='text-center'>平均消耗时间</th>
+                                            <th class='text-center'>最大消耗时间</th>
+                                            <th class='text-center'>最小消耗时间</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>Adminto Admin v1</td>
-                                            <td>01/01/2016</td>
-                                            <td>26/04/2016</td>
-                                            <td><span class="label label-danger">已发布</span></td>
-                                            <td>Coderthemes</td>
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>Adminto Frontend v1</td>
-                                            <td>01/01/2016</td>
-                                            <td>26/04/2016</td>
-                                            <td><span class="label label-success">已发布</span></td>
-                                            <td>Adminto admin</td>
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>Adminto Admin v1.1</td>
-                                            <td>01/05/2016</td>
-                                            <td>10/05/2016</td>
-                                            <td><span class="label label-pink">未开展</span></td>
-                                            <td>Coderthemes</td>
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>Adminto Frontend v1.1</td>
-                                            <td>01/01/2016</td>
-                                            <td>31/05/2016</td>
-                                            <td>
-                                                <span class="label label-purple">进行中</span>
-                                            </td>
-                                            <td>Adminto admin</td>
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td>Adminto Admin v1.3</td>
-                                            <td>01/01/2016</td>
-                                            <td>31/05/2016</td>
-                                            <td><span class="label label-warning">即将开始</span></td>
-                                            <td>Coderthemes</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>6</td>
-                                            <td>Adminto Admin v1.3</td>
-                                            <td>01/01/2016</td>
-                                            <td>31/05/2016</td>
-                                            <td><span class="label label-primary">即将开始</span></td>
-                                            <td>Adminto admin</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td>7</td>
-                                            <td>Adminto Admin v1.3</td>
-                                            <td>01/01/2016</td>
-                                            <td>31/05/2016</td>
-                                            <td><span class="label label-primary">即将开始</span></td>
-                                            <td>Adminto admin</td>
-                                        </tr>
-                                    </tbody>
+                                    <tbody></tbody>
                                 </table>
+                                <div class="am-cf" id="MethodRequestList-PageInfo">
+                                </div>
                             </div>
                         </div>
                     </div>
                     <!-- col end -->
                 </div>
+
+                <div class="am-g">
+                    <!-- col start -->
+                    <div class="am-u-md-12">
+                        <div class="card-box">
+                            <h4 class="header-title m-t-0 m-b-30">错误方法列表</h4>
+                            <div class="am-scrollable-horizontal am-text-ms" style="font-family: '微软雅黑';">
+                                <table class="am-table am-text-nowrap" id="ErrorMethodRequestList">
+                                    <thead>
+                                        <tr>
+                                            <th class='text-center'>方法信息</th>
+                                            <th class='text-center'>请求时间</th>
+                                            <th class='text-center'>错误原因</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div class="am-cf" id="ErrorMethodRequestList-PageInfo">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- col end -->
+                </div>
+
+
+
             </div>
         </div>
         <!-- end right Content here -->
-        <!--</div>-->
     </div>
 
     <!-- navbar -->
@@ -420,12 +192,24 @@
     <script type="text/javascript" src="/js/app.js"></script>
     <script type="text/javascript" src="/js/blockUI.js"></script>
     <script type="text/javascript" src="/js/charts/echarts.min.js"></script>
-    <script type="text/javascript" src="/js/charts/indexChart.js"></script>
+    <script src="~/My97DatePicker/WdatePicker.js"></script>
     <script type="text/javascript">
         (function () {
+            Install();
+
+        })();
+
+        function Install() {
+            InstallLoadExcuteCount();
+            InstallLoadExcuteMethod(1);
+            InstallLoadExcuteErrorMethod(1);
+        }
+
+        function InstallLoadExcuteCount() {
             $.ajax({
                 type: "get",
                 url: "/Home/LoadExcuteCount",
+                data: { timeType: $("#timeType").val(), startTime: $("#startTime").val(), endTime: $("#endTime").val() },
                 success: function (data) {
                     console.log(data);
                     setTotalStatistic(data);
@@ -438,10 +222,8 @@
                     var excuteSpendSeriesData = createSeries(data.statisticList, ['平均耗时', '最大耗时', '最小耗时']);
                     var excuteSpendOption = createOption(['平均耗时', '最大耗时', '最小耗时'], data.statisticList[0].timeArray, excuteSpendSeriesData)
                     excuteSpendChart.setOption(excuteSpendOption);
-
                 }
             })
-
             function setTotalStatistic(data) {
                 $("#TotalExcuteCount").text(data.totalExcuteCount);
                 $("#TotalErrorCount").text(data.totalErrorCount);
@@ -450,8 +232,91 @@
                 $("#MaxExcutedMillisecond").text(data.maxExcutedMillisecond.toFixed(3) + 'ms');
                 $("#MinExcutedMillisecond").text(data.minExcutedMillisecond.toFixed(3) + 'ms');
             }
+        };
 
-        })();
+        function InstallLoadExcuteMethod(pageIndex) {
+            $.ajax({
+                type: "get",
+                url: "/Home/LoadExcuteMethod",
+                data: { timeType: $("#timeType").val(), startTime: $("#startTime").val(), endTime: $("#endTime").val(), pageIndex: pageIndex },
+                success: function (data) {
+                    console.log(data);
+                    var bodyHtml = "";
+                    if (data.data) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            bodyHtml += "<tr>";
+                            bodyHtml += "<td class='text-center'>" + data.data[i].requestTypeName + "-" + data.data[i].requestMethodName + "-" + data.data[i].requestParameterCount + "</td>";
+                            bodyHtml += "<td class='text-center'>" + data.data[i].totalExcuteCount + "</td>";
+                            bodyHtml += "<td class='text-center text-danger'>" + data.data[i].errorCount + "</td>";
+                            bodyHtml += "<td class='text-center'>" + data.data[i].avgExcutedMillisecond.toFixed(3) + "</td>";
+                            bodyHtml += "<td class='text-center'>" + data.data[i].maxExcutedMillisecond.toFixed(3) + "</td>";
+                            bodyHtml += "<td class='text-center'>" + data.data[i].minExcutedMillisecond.toFixed(3) + "</td>";
+                            bodyHtml += "</tr>";
+                        }
+                    }
+                    if (bodyHtml == "") {
+                        bodyHtml = "<tr><td class='text-center text-danger' colspan='6'>暂无记录</td></tr>";
+                    }
+                    $("#MethodRequestList").find("tbody").html(bodyHtml);
+                    var pageHtml = createPageInfo(data.pageInfo, "InstallLoadExcuteMethod");
+                    $("#MethodRequestList-PageInfo").html(pageHtml);
+                }
+            })
+        }
+
+        function InstallLoadExcuteErrorMethod(pageIndex) {
+            $.ajax({
+                type: "get",
+                url: "/Home/LoadExcuteErrorMethod",
+                data: { timeType: $("#timeType").val(), startTime: $("#startTime").val(), endTime: $("#endTime").val(), pageIndex: pageIndex },
+                success: function (data) {
+                    console.log(data);
+                    var bodyHtml = "";
+                    if (data.data) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            bodyHtml += "<tr>";
+                            bodyHtml += "<td class='text-center'>" + data.data[i].requestTypeName + "-" + data.data[i].requestMethodName + "-" + data.data[i].requestParameterCount + "</td>";
+                            bodyHtml += "<td class='text-center'>" + data.data[i].requestTime + "</td>";
+                            bodyHtml += "<td class='text-center text-danger'>" + data.data[i].errorMsg + "</td>";
+                            bodyHtml += "</tr>";
+                        }
+                    }
+                    if (bodyHtml == "") {
+                        bodyHtml = "<tr><td class='text-center text-danger' colspan='3'>暂无记录</td></tr>";
+                    }
+                    $("#ErrorMethodRequestList").find("tbody").html(bodyHtml);
+                    var pageHtml = createPageInfo(data.pageInfo, "InstallLoadExcuteErrorMethod");
+                    $("#ErrorMethodRequestList-PageInfo").html(pageHtml);
+                }
+            })
+        }
+
+        function createPageInfo(pageInfo, functionName) {
+            var pageHtml = "共 " + pageInfo.totalPage + "页" + pageInfo.totalPage + " 条记录 <div class='am-fr'><ul class='am-pagination'>";
+
+            if (pageInfo.currentPage > 1) {
+                pageHtml += "<li class='am-active'><a onclick='" + functionName + "(1)'>首页</a></li>";
+
+            }
+            if (pageInfo.havePrePage) {
+                pageHtml += "<li class='am-active'><a onclick='" + functionName + "(" + (pageInfo.currentPage - 1).toString() + ")'>上一页</a></li>";
+            } else {
+                pageHtml += "<li class='am-disabled'><a onclick='javascript:void(0);'>上一页</a></li>";
+
+            }
+            pageHtml += "<li class='am-disabled'><a onclick='javascript:void(0);'>" + pageInfo.currentPage + "</a></li>";
+            if (pageInfo.haveNextPage) {
+                pageHtml += "<li class='am-active'><a onclick='" + functionName + "(" + (pageInfo.currentPage + 1) + ")'>下一页</a></li>";
+            } else {
+                pageHtml += "<li class='am-disabled'><a onclick='javascript:void(0);'>下一页</a></li>";
+
+            }
+            if (pageInfo.currentPage < pageInfo.totalPage) {
+                pageHtml += "<li class='am-active'><a onclick='" + functionName + "(" + pageInfo.totalPage + ")'>首页</a></li>";
+
+            }
+            return pageHtml;
+        }
 
         function createSeries(data, descArray) {
             var array = new Array();
@@ -459,7 +324,6 @@
                 if ($.inArray(data[i].description, descArray) >= 0) {
                     array.push({ name: data[i].description, data: data[i].valueList, type: 'line', });
                 }
-
             }
             return array;
         }
