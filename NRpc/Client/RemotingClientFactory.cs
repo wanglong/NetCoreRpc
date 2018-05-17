@@ -24,10 +24,11 @@ namespace NRpc.Client
             var className = classType.FullName;
             //TODO 根据类名字动态获取IP端口信息
             var configProvider = DependencyManage.Resolve<IConfigProvider>();
-            var ipEndPoint = configProvider.GetConfig().GetEndPoint(classType.FullName);
+            var config = configProvider.GetConfig();
+            var ipEndPoint = config.GetEndPoint(classType.FullName);
             var clientPool = ClientPoolList.GetValue(ipEndPoint, () =>
             {
-                return new ClientPool(200, ipEndPoint);
+                return new ClientPool(config.MaxClientPoolCount, ipEndPoint);
             });
             return clientPool.GetCilent();
         }
